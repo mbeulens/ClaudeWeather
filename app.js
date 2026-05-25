@@ -140,49 +140,122 @@ function formatDayHeader(day, sampleCity) {
 
 // Open-Meteo allows batched lat/lon. Cap each request at MAX_BATCH coordinates.
 const MAX_BATCH = 80;
+const FETCH_TIMEOUT_MS = 15000;
 
-async function fetchWeatherForCities(cities) {
-  if (cities.length === 0) return [];
-  const out = [];
-  for (let off = 0; off < cities.length; off += MAX_BATCH) {
-    const chunk = cities.slice(off, off + MAX_BATCH);
-    const lats = chunk.map((c) => c.lat).join(",");
-    const lons = chunk.map((c) => c.lon).join(",");
-    const url =
-      `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
-      `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
-      `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
-      `&forecast_days=8` +
-      `&timezone=auto`;
-    const resp = await fetch(url);
+// Weather is cached in localStorage for one hour, keyed by city. Reloads within
+// the hour render instantly and make no network calls — this is what keeps the
+// 241-capital startup from stalling on every visit.
+const WEATHER_TTL_MS = 60 * 60 * 1000;
+const CACHE_PREFIX = "cw:wx:";
+
+function readWeatherCache(key) {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + key);
+    if (!raw) return null;
+    const entry = JSON.parse(raw);
+    if (!entry || Date.now() - entry.t > WEATHER_TTL_MS) return null;
+    return { current: entry.current, daily: entry.daily };
+  } catch {
+    return null;
+  }
+}
+
+function writeWeatherCache(key, current, daily) {
+  const payload = JSON.stringify({ t: Date.now(), current, daily });
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, payload);
+  } catch {
+    // Likely quota exceeded — drop our cached entries and try once more.
+    try {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k);
+      }
+      localStorage.setItem(CACHE_PREFIX + key, payload);
+    } catch {
+      /* storage unavailable — fetching still works, just uncached */
+    }
+  }
+}
+
+function parseForecast(d) {
+  let current = null;
+  const daily = [];
+  if (d?.current) {
+    current = {
+      temp:     d.current.temperature_2m,
+      code:     d.current.weather_code,
+      humidity: d.current.relative_humidity_2m,
+      wind:     d.current.wind_speed_10m,
+      updated:  d.current.time,
+    };
+  }
+  if (d?.daily?.time) {
+    for (let k = 0; k < d.daily.time.length; k++) {
+      daily.push({
+        date: d.daily.time[k],
+        code: d.daily.weather_code?.[k],
+        tmax: d.daily.temperature_2m_max?.[k],
+        tmin: d.daily.temperature_2m_min?.[k],
+      });
+    }
+  }
+  return { current, daily };
+}
+
+async function fetchBatch(chunk) {
+  const lats = chunk.map((c) => c.lat).join(",");
+  const lons = chunk.map((c) => c.lon).join(",");
+  const url =
+    `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
+    `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
+    `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+    `&forecast_days=8` +
+    `&timezone=auto`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const resp = await fetch(url, { signal: ctrl.signal });
     if (!resp.ok) throw new Error(`Open-Meteo ${resp.status}`);
     const data = await resp.json();
     const list = Array.isArray(data) ? data : [data];
-    chunk.forEach((c, i) => {
-      const d = list[i];
-      let current = null;
-      let daily = [];
-      if (d?.current) {
-        current = {
-          temp:     d.current.temperature_2m,
-          code:     d.current.weather_code,
-          humidity: d.current.relative_humidity_2m,
-          wind:     d.current.wind_speed_10m,
-          updated:  d.current.time,
-        };
-      }
-      if (d?.daily?.time) {
-        for (let k = 0; k < d.daily.time.length; k++) {
-          daily.push({
-            date: d.daily.time[k],
-            code: d.daily.weather_code?.[k],
-            tmax: d.daily.temperature_2m_max?.[k],
-            tmin: d.daily.temperature_2m_min?.[k],
-          });
-        }
-      }
-      out.push({ ...c, current, daily });
+    return chunk.map((c, i) => {
+      const { current, daily } = parseForecast(list[i]);
+      writeWeatherCache(c.key, current, daily);
+      return { ...c, current, daily };
     });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchWeatherForCities(cities) {
+  if (cities.length === 0) return [];
+
+  // 1. Serve anything still fresh from the 1-hour cache.
+  const out = [];
+  const misses = [];
+  for (const c of cities) {
+    const cached = readWeatherCache(c.key);
+    if (cached) out.push({ ...c, current: cached.current, daily: cached.daily });
+    else misses.push(c);
+  }
+  if (misses.length === 0) return out;
+
+  // 2. Fetch the misses as parallel batches with a timeout. A failed or
+  //    timed-out batch is skipped (logged), not fatal — partial data still renders.
+  const batches = [];
+  for (let off = 0; off < misses.length; off += MAX_BATCH) {
+    batches.push(misses.slice(off, off + MAX_BATCH));
+  }
+  const settled = await Promise.allSettled(batches.map(fetchBatch));
+  let failed = 0;
+  for (const r of settled) {
+    if (r.status === "fulfilled") out.push(...r.value);
+    else { failed++; console.warn("Weather batch failed", r.reason); }
+  }
+  if (failed === settled.length && out.length === 0) {
+    throw new Error("All weather requests failed");
   }
   return out;
 }
