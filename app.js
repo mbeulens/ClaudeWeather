@@ -353,7 +353,7 @@ function applyDay(day) {
       fillColor: tempToColor(t),
       fillOpacity: state.satellite ? (noData ? 0.08 : 0.32) : (noData ? 0.15 : 0.55),
     });
-    layer.setTooltipContent(buildTooltipHtml(city, view));
+    layer.setPopupContent(buildPopupHtml(city, view));
   }
 
   // Update all live markers.
@@ -615,11 +615,13 @@ async function init() {
     onEachFeature: (feature, layer) => {
       const iso = feature.properties.ISO2;
       state.countryLayers.set(iso, layer);
-      layer.bindTooltip("", {
-        className: "weather-tooltip",
-        sticky: true,
-        direction: "top",
-      });
+      // Weather shows on click (popup), not on hover. Content is filled in by
+      // applyDay for countries that have a capital in our dataset.
+      layer.bindPopup(
+        `<div class="popup-title">${feature.properties.NAME}</div>` +
+          `<div class="popup-row"><span>No weather data</span></div>`,
+        { maxWidth: 260 }
+      );
       layer.on({
         mouseover: (e) => e.target.setStyle({ weight: 2, color: "#222", opacity: 1 }),
         mouseout:  (e) => e.target.setStyle({ weight: 1, color: "#ffffff", opacity: 0.7 }),
