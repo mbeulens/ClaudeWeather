@@ -319,6 +319,50 @@ function setMarkerVisibility(city, visible) {
   else if (!visible && state.map.hasLayer(marker)) state.map.removeLayer(marker);
 }
 
+// Approx on-screen footprint of a marker pill (centered on its point), plus a
+// little breathing room, used for collision tests.
+const MARKER_W = 68;
+const MARKER_H = 34;
+
+// Higher wins when two markers collide: capitals outrank extras; ties broken by
+// population (capitals carry exact pop; extras use their zoom tier as a proxy).
+function cityPriority(city) {
+  if (city.isCapital) return 2e9 + (city.pop || 0);
+  return { 5: 500000, 6: 200000, 7: 100000 }[city.minZoom] || 0;
+}
+
+// Hide markers that would overlap a higher-priority neighbour at the current
+// zoom; reveal more as the user zooms in. Greedy, highest priority placed first.
+function declutter() {
+  const map = state.map;
+  if (!map) return;
+  const zoom = map.getZoom();
+  const bounds = map.getBounds();
+
+  const candidates = [];
+  for (const city of state.cities) {
+    if (!state.weatherMarkers.has(city.key)) continue;
+    const zoomOk = city.isCapital || zoom >= city.minZoom;
+    if (zoomOk && bounds.contains([city.lat, city.lon])) candidates.push(city);
+    else setMarkerVisibility(city, false);
+  }
+  candidates.sort((a, b) => cityPriority(b) - cityPriority(a));
+
+  const placed = [];
+  for (const city of candidates) {
+    const p = map.latLngToContainerPoint([city.lat, city.lon]);
+    let collides = false;
+    for (const q of placed) {
+      if (Math.abs(p.x - q.x) < MARKER_W && Math.abs(p.y - q.y) < MARKER_H) {
+        collides = true;
+        break;
+      }
+    }
+    setMarkerVisibility(city, !collides);
+    if (!collides) placed.push(p);
+  }
+}
+
 async function recomputeVisible() {
   const map = state.map;
   if (!map) return;
@@ -331,11 +375,10 @@ async function recomputeVisible() {
     if (eligible && !city.current && !state.pendingFetchKeys.has(city.key)) {
       needFetch.push(city);
     }
-    // Existing markers: toggle visibility (capitals always visible).
-    if (state.weatherMarkers.has(city.key)) {
-      setMarkerVisibility(city, eligible);
-    }
   }
+
+  // Reveal/hide existing markers based on overlap at the current zoom.
+  declutter();
 
   if (needFetch.length === 0) return;
 
@@ -349,8 +392,10 @@ async function recomputeVisible() {
       stored.daily = fc.daily;
       addMarkerForCity(stored);
     }
-    // After adding new markers, ensure they reflect the selected day.
+    // After adding new markers, ensure they reflect the selected day and
+    // re-run collision layout so the new pills don't overlap.
     applyDay(state.selectedDay);
+    declutter();
   } catch (err) {
     console.error("Lazy city fetch failed", err);
   } finally {
@@ -378,6 +423,7 @@ async function loadCapitals() {
     country: c.country,
     lat: c.lat,
     lon: c.lon,
+    pop: c.pop ?? 0,
     minZoom: 0,
     isCapital: true,
   }));
@@ -527,6 +573,7 @@ async function init() {
 
   wireSlider();
   applyDay(0);
+  declutter(); // thin out overlapping capitals on the initial view
 
   // Lazy-load extras on map movement.
   const debounced = debounce(recomputeVisible, 300);
