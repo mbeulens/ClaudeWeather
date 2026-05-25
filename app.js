@@ -1,6 +1,7 @@
-// ClaudeWeather — full-bleed Europe map with live weather per capital + country fill by temperature.
+// ClaudeWeather — full-bleed Europe map with live weather + 7-day forecast,
+// capitals always visible, extra cities lazy-loaded as the user zooms in.
 
-const CAPITALS = [
+const CAPITALS_RAW = [
   { iso: "AL", name: "Tirana",      country: "Albania",                                    lat: 41.3275, lon: 19.8189 },
   { iso: "AD", name: "Andorra la Vella", country: "Andorra",                               lat: 42.5063, lon:  1.5218 },
   { iso: "AM", name: "Yerevan",     country: "Armenia",                                    lat: 40.1792, lon: 44.4991 },
@@ -54,8 +55,6 @@ const CAPITALS = [
   { iso: "GB", name: "London",      country: "United Kingdom",                             lat: 51.5074, lon: -0.1278 },
 ];
 
-// Open-Meteo WMO weather codes → { icon, label }
-// https://open-meteo.com/en/docs (WMO Weather interpretation codes table)
 const WEATHER_CODES = {
   0:  { icon: "☀️", label: "Clear sky" },
   1:  { icon: "🌤️", label: "Mainly clear" },
@@ -88,13 +87,13 @@ const WEATHER_CODES = {
 };
 
 const TEMP_STOPS = [
-  { t: -10, c: [44, 123, 182]  }, // deep blue
+  { t: -10, c: [44, 123, 182]  },
   { t:   0, c: [92, 179, 217]  },
   { t:   5, c: [171, 217, 233] },
   { t:  10, c: [217, 240, 163] },
   { t:  15, c: [254, 224, 144] },
   { t:  22, c: [253, 174,  97] },
-  { t:  35, c: [215,  25,  28] }, // hot red
+  { t:  35, c: [215,  25,  28] },
 ];
 
 function tempToColor(t) {
@@ -147,8 +146,14 @@ function showError(message, onRetry) {
   document.body.appendChild(banner);
 }
 
-// Returns view for slider day index (0=Today, 1..7=forecast).
-// For day=0 we use `current` (live hourly temp). For day>=1 we use `daily[day]`.
+function debounce(fn, ms) {
+  let t;
+  return function (...args) {
+    clearTimeout(t);
+    t = setTimeout(() => fn.apply(this, args), ms);
+  };
+}
+
 function viewForDay(city, day) {
   if (day === 0) {
     const c = city.current;
@@ -186,47 +191,53 @@ function formatDayHeader(day, sampleCity) {
   };
 }
 
-async function fetchWeatherForAll(capitals) {
-  // Batch all capitals into ONE Open-Meteo request via comma-separated lat/lon.
-  // Returns each city extended with `.current` and `.daily` (array indexed 0..7).
-  const lats = capitals.map((c) => c.lat).join(",");
-  const lons = capitals.map((c) => c.lon).join(",");
-  const url =
-    `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
-    `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
-    `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
-    `&forecast_days=8` +
-    `&timezone=auto`;
+// Open-Meteo allows batched lat/lon. Cap each request at MAX_BATCH coordinates.
+const MAX_BATCH = 80;
 
-  const resp = await fetch(url);
-  if (!resp.ok) throw new Error(`Open-Meteo ${resp.status}`);
-  const data = await resp.json();
-  const list = Array.isArray(data) ? data : [data];
-  return capitals.map((cap, i) => {
-    const d = list[i];
-    if (!d) return { ...cap, current: null, daily: [] };
-    const current = d.current
-      ? {
+async function fetchWeatherForCities(cities) {
+  if (cities.length === 0) return [];
+  const out = [];
+  for (let off = 0; off < cities.length; off += MAX_BATCH) {
+    const chunk = cities.slice(off, off + MAX_BATCH);
+    const lats = chunk.map((c) => c.lat).join(",");
+    const lons = chunk.map((c) => c.lon).join(",");
+    const url =
+      `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
+      `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
+      `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+      `&forecast_days=8` +
+      `&timezone=auto`;
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`Open-Meteo ${resp.status}`);
+    const data = await resp.json();
+    const list = Array.isArray(data) ? data : [data];
+    chunk.forEach((c, i) => {
+      const d = list[i];
+      let current = null;
+      let daily = [];
+      if (d?.current) {
+        current = {
           temp:     d.current.temperature_2m,
           code:     d.current.weather_code,
           humidity: d.current.relative_humidity_2m,
           wind:     d.current.wind_speed_10m,
           updated:  d.current.time,
-        }
-      : null;
-    const daily = [];
-    if (d.daily?.time) {
-      for (let k = 0; k < d.daily.time.length; k++) {
-        daily.push({
-          date: d.daily.time[k],
-          code: d.daily.weather_code?.[k],
-          tmax: d.daily.temperature_2m_max?.[k],
-          tmin: d.daily.temperature_2m_min?.[k],
-        });
+        };
       }
-    }
-    return { ...cap, current, daily };
-  });
+      if (d?.daily?.time) {
+        for (let k = 0; k < d.daily.time.length; k++) {
+          daily.push({
+            date: d.daily.time[k],
+            code: d.daily.weather_code?.[k],
+            tmax: d.daily.temperature_2m_max?.[k],
+            tmin: d.daily.temperature_2m_min?.[k],
+          });
+        }
+      }
+      out.push({ ...c, current, daily });
+    });
+  }
+  return out;
 }
 
 function buildMarkerIcon(view) {
@@ -289,18 +300,19 @@ function buildPopupHtml(city, view) {
   `;
 }
 
-// Renderer state — references kept so the slider can mutate them in place.
 const state = {
-  cities: [],                       // CAPITALS extended with weather
-  countryLayers: new Map(),         // ISO2 → Leaflet path layer
-  weatherMarkers: new Map(),        // ISO2 → Leaflet marker
+  map: null,
+  cities: [],                       // all cities (capitals + extras), populated incrementally
+  citiesByKey: new Map(),           // key → city object (same refs as state.cities)
+  countryLayers: new Map(),         // ISO2 → Leaflet path layer (capitals drive country fill)
+  weatherMarkers: new Map(),        // key → Leaflet marker
   selectedDay: 0,
+  pendingFetchKeys: new Set(),      // keys currently being fetched
 };
 
 function applyDay(day) {
   state.selectedDay = day;
 
-  // Update day-name + date header above the slider.
   const sample = state.cities.find((c) => c.daily?.length > 0) ?? state.cities[0];
   const { name, date } = formatDayHeader(day, sample);
   const nameEl = document.getElementById("day-name");
@@ -308,8 +320,9 @@ function applyDay(day) {
   if (nameEl) nameEl.textContent = name;
   if (dateEl) dateEl.textContent = date;
 
-  // Update country fills.
+  // Country fills are driven by capitals only.
   for (const city of state.cities) {
+    if (!city.isCapital) continue;
     const layer = state.countryLayers.get(city.iso);
     if (!layer) continue;
     const view = viewForDay(city, day);
@@ -321,14 +334,78 @@ function applyDay(day) {
     layer.setTooltipContent(buildTooltipHtml(city, view));
   }
 
-  // Update markers.
-  for (const city of state.cities) {
-    const marker = state.weatherMarkers.get(city.iso);
-    if (!marker) continue;
+  // Update all live markers.
+  for (const [key, marker] of state.weatherMarkers) {
+    const city = state.citiesByKey.get(key);
+    if (!city) continue;
     const view = viewForDay(city, day);
     marker.setIcon(buildMarkerIcon(view));
     marker.setTooltipContent(buildTooltipHtml(city, view));
     marker.setPopupContent(buildPopupHtml(city, view));
+  }
+}
+
+function addMarkerForCity(city) {
+  if (state.weatherMarkers.has(city.key)) return;
+  const view = viewForDay(city, state.selectedDay);
+  if (!view) return;
+  const marker = L.marker([city.lat, city.lon], {
+    icon: buildMarkerIcon(view),
+    keyboard: false,
+    riseOnHover: true,
+  }).addTo(state.map);
+  marker.bindTooltip(buildTooltipHtml(city, view), {
+    className: "weather-tooltip",
+    direction: "top",
+    offset: [0, -10],
+  });
+  marker.bindPopup(buildPopupHtml(city, view), { maxWidth: 260 });
+  state.weatherMarkers.set(city.key, marker);
+}
+
+function setMarkerVisibility(city, visible) {
+  const marker = state.weatherMarkers.get(city.key);
+  if (!marker) return;
+  if (visible && !state.map.hasLayer(marker)) marker.addTo(state.map);
+  else if (!visible && state.map.hasLayer(marker)) state.map.removeLayer(marker);
+}
+
+async function recomputeVisible() {
+  const map = state.map;
+  if (!map) return;
+  const zoom = map.getZoom();
+  const bounds = map.getBounds();
+
+  const needFetch = [];
+  for (const city of state.cities) {
+    const eligible = city.isCapital || (zoom >= city.minZoom && bounds.contains([city.lat, city.lon]));
+    if (eligible && !city.current && !state.pendingFetchKeys.has(city.key)) {
+      needFetch.push(city);
+    }
+    // Existing markers: toggle visibility (capitals always visible).
+    if (state.weatherMarkers.has(city.key)) {
+      setMarkerVisibility(city, eligible);
+    }
+  }
+
+  if (needFetch.length === 0) return;
+
+  for (const c of needFetch) state.pendingFetchKeys.add(c.key);
+  try {
+    const fetched = await fetchWeatherForCities(needFetch);
+    for (const fc of fetched) {
+      const stored = state.citiesByKey.get(fc.key);
+      if (!stored) continue;
+      stored.current = fc.current;
+      stored.daily = fc.daily;
+      addMarkerForCity(stored);
+    }
+    // After adding new markers, ensure they reflect the selected day.
+    applyDay(state.selectedDay);
+  } catch (err) {
+    console.error("Lazy city fetch failed", err);
+  } finally {
+    for (const c of needFetch) state.pendingFetchKeys.delete(c.key);
   }
 }
 
@@ -341,17 +418,38 @@ function wireSlider() {
   });
 }
 
+async function loadExtraCities() {
+  try {
+    const r = await fetch("cities.json");
+    if (!r.ok) throw new Error(`cities.json ${r.status}`);
+    const data = await r.json();
+    return data.map((c) => ({
+      key: `city:${c.id}`,
+      iso: c.iso,
+      name: c.name,
+      country: c.country,
+      lat: c.lat,
+      lon: c.lon,
+      minZoom: c.minZoom,
+      isCapital: false,
+    }));
+  } catch (err) {
+    console.warn("cities.json missing; only capitals will be shown", err);
+    return [];
+  }
+}
+
 async function init() {
   setStatus("Initializing map…");
 
-  const map = L.map("map", {
+  state.map = L.map("map", {
     zoomControl: true,
     worldCopyJump: false,
     minZoom: 3,
     maxZoom: 9,
   }).setView([54, 15], 4);
 
-  map.setMaxBounds([
+  state.map.setMaxBounds([
     [30, -35],
     [75,  55],
   ]);
@@ -362,7 +460,7 @@ async function init() {
       '&copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
     maxZoom: 19,
-  }).addTo(map);
+  }).addTo(state.map);
 
   const labelsLayer = L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
@@ -382,17 +480,19 @@ async function init() {
     return;
   }
 
-  try {
-    setStatus(`Fetching weather + 7-day forecast for ${CAPITALS.length} capitals…`);
-    state.cities = await fetchWeatherForAll(CAPITALS);
-  } catch (err) {
-    console.error(err);
-    setStatus("Weather unavailable.");
-    showError("Could not fetch weather from Open-Meteo.", () => init());
-    state.cities = CAPITALS.map((c) => ({ ...c, current: null, daily: [] }));
-  }
+  // Register capitals and extras into shared state.cities.
+  const capitals = CAPITALS_RAW.map((c) => ({
+    ...c,
+    key: `cap:${c.iso}`,
+    country: c.country,
+    minZoom: 0,
+    isCapital: true,
+  }));
+  const extras = await loadExtraCities();
+  state.cities = [...capitals, ...extras];
+  for (const c of state.cities) state.citiesByKey.set(c.key, c);
 
-  // Draw country layer; capture references for later updates.
+  // Draw country layer; capture references.
   L.geoJSON(geojson, {
     style: () => ({
       fillColor: "#cccccc",
@@ -414,30 +514,35 @@ async function init() {
         mouseout:  (e) => e.target.setStyle({ weight: 1, color: "#ffffff", opacity: 0.7 }),
       });
     },
-  }).addTo(map);
+  }).addTo(state.map);
+  labelsLayer.addTo(state.map);
 
-  labelsLayer.addTo(map);
-
-  // Drop weather markers (only for cities with at least current data).
-  let placed = 0;
-  for (const c of state.cities) {
-    if (!c.current && (!c.daily || c.daily.length === 0)) continue;
-    const marker = L.marker([c.lat, c.lon], {
-      icon: buildMarkerIcon({ temp: c.current?.temp, code: c.current?.code, extras: { isToday: true } }),
-      keyboard: false,
-      riseOnHover: true,
-    }).addTo(map);
-
-    marker.bindTooltip("", { className: "weather-tooltip", direction: "top", offset: [0, -10] });
-    marker.bindPopup("", { maxWidth: 260 });
-    state.weatherMarkers.set(c.iso, marker);
-    placed++;
+  // Fetch capitals up-front and create their markers.
+  try {
+    setStatus(`Fetching weather + 7-day forecast for ${capitals.length} capitals…`);
+    const fetched = await fetchWeatherForCities(capitals);
+    for (const fc of fetched) {
+      const stored = state.citiesByKey.get(fc.key);
+      if (!stored) continue;
+      stored.current = fc.current;
+      stored.daily = fc.daily;
+      addMarkerForCity(stored);
+    }
+  } catch (err) {
+    console.error(err);
+    setStatus("Weather unavailable.");
+    showError("Could not fetch weather from Open-Meteo.", () => init());
   }
 
   wireSlider();
   applyDay(0);
 
-  setStatus(`${placed} cities · live + 7-day from Open-Meteo`);
+  // Lazy-load extras on map movement.
+  const debounced = debounce(recomputeVisible, 300);
+  state.map.on("moveend", debounced);
+  state.map.on("zoomend", debounced);
+
+  setStatus(`${capitals.length} capitals · ${extras.length} extra cities (zoom to load) · live + 7-day from Open-Meteo`);
 }
 
 document.addEventListener("DOMContentLoaded", init);
