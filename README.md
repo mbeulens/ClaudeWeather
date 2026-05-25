@@ -1,12 +1,14 @@
 # ClaudeWeather
 
-A full-screen map of Europe with live weather (sun / cloud / rain icons + temperature) per region.
+A full-screen map of the world with live weather (sun / cloud / rain icons + temperature) per region. Opens centered on Europe.
 
-- **Map:** Leaflet + CartoDB Positron tiles, full viewport
+- **Map:** Leaflet, full viewport — toggle between **Satellite** (Esri World Imagery, default) and **Map** (CartoDB Positron)
 - **Data:** [Open-Meteo](https://open-meteo.com) (free, no API key required)
-- **Granularity:** European countries (shaded by temperature) + capital-city markers (icon + temp)
-- **Forecast slider:** scrub from today through +5 days; fills and markers re-style in place
-- **Zoom-based cities:** 51 capitals load up front; more cities appear as you zoom in
+- **Granularity:** countries shaded by temperature + city markers (icon + temp); click a country for its capital's weather
+- **Forecast slider:** scrub from today through +7 days; fills and markers re-style in place
+- **Zoom-based cities:** 241 capitals load up front; cities (≥100k population) reveal as you zoom in
+- **Decluttering:** overlapping markers are thinned at each zoom (capitals / larger cities win)
+- **Caching:** weather is cached in `localStorage` for 1 hour, so reloads are instant
 - **Stack:** Plain HTML / CSS / JavaScript — no build step
 
 ## Run
@@ -20,15 +22,16 @@ python3 -m http.server 8000
 
 ## Project layout
 
-| File              | Purpose                                                    |
-| ----------------- | ---------------------------------------------------------- |
-| `index.html`      | Leaflet container + forecast slider markup + script tags   |
-| `style.css`       | Full-bleed map, marker / tooltip / legend / slider styles  |
-| `app.js`          | Weather fetch, country shading, markers, slider, zoom logic |
-| `europe.geo.json` | Bundled GeoJSON of European countries                      |
-| `cities.json`     | European cities ≥100k population, tiered by `minZoom`       |
-| `VERSION`         | Current semver                                             |
-| `CHANGELOG.md`    | Release history                                            |
+| File             | Purpose                                                              |
+| ---------------- | -------------------------------------------------------------------- |
+| `index.html`     | Leaflet container + forecast slider markup + script tags             |
+| `style.css`      | Full-bleed map, marker / popup / legend / slider styles              |
+| `app.js`         | Weather fetch + cache, country shading, markers, slider, zoom, declutter |
+| `world.geo.json` | Bundled GeoJSON of world countries (Natural Earth)                   |
+| `capitals.json`  | 241 national capitals, always loaded                                 |
+| `cities.json`    | World cities ≥100k population, tiered by `minZoom`                   |
+| `VERSION`        | Current semver                                                       |
+| `CHANGELOG.md`   | Release history                                                      |
 
 ## Versioning
 

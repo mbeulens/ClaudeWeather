@@ -1,59 +1,6 @@
-// ClaudeWeather — full-bleed Europe map with live weather + 7-day forecast,
-// capitals always visible, extra cities lazy-loaded as the user zooms in.
-
-const CAPITALS_RAW = [
-  { iso: "AL", name: "Tirana",      country: "Albania",                                    lat: 41.3275, lon: 19.8189 },
-  { iso: "AD", name: "Andorra la Vella", country: "Andorra",                               lat: 42.5063, lon:  1.5218 },
-  { iso: "AM", name: "Yerevan",     country: "Armenia",                                    lat: 40.1792, lon: 44.4991 },
-  { iso: "AT", name: "Vienna",      country: "Austria",                                    lat: 48.2082, lon: 16.3738 },
-  { iso: "AZ", name: "Baku",        country: "Azerbaijan",                                 lat: 40.4093, lon: 49.8671 },
-  { iso: "BY", name: "Minsk",       country: "Belarus",                                    lat: 53.9006, lon: 27.5590 },
-  { iso: "BE", name: "Brussels",    country: "Belgium",                                    lat: 50.8503, lon:  4.3517 },
-  { iso: "BA", name: "Sarajevo",    country: "Bosnia and Herzegovina",                     lat: 43.8563, lon: 18.4131 },
-  { iso: "BG", name: "Sofia",       country: "Bulgaria",                                   lat: 42.6977, lon: 23.3219 },
-  { iso: "HR", name: "Zagreb",      country: "Croatia",                                    lat: 45.8150, lon: 15.9819 },
-  { iso: "CY", name: "Nicosia",     country: "Cyprus",                                     lat: 35.1856, lon: 33.3823 },
-  { iso: "CZ", name: "Prague",      country: "Czech Republic",                             lat: 50.0755, lon: 14.4378 },
-  { iso: "DK", name: "Copenhagen",  country: "Denmark",                                    lat: 55.6761, lon: 12.5683 },
-  { iso: "EE", name: "Tallinn",     country: "Estonia",                                    lat: 59.4370, lon: 24.7536 },
-  { iso: "FO", name: "Tórshavn",    country: "Faroe Islands",                              lat: 62.0079, lon: -6.7713 },
-  { iso: "FI", name: "Helsinki",    country: "Finland",                                    lat: 60.1699, lon: 24.9384 },
-  { iso: "FR", name: "Paris",       country: "France",                                     lat: 48.8566, lon:  2.3522 },
-  { iso: "GE", name: "Tbilisi",     country: "Georgia",                                    lat: 41.7151, lon: 44.8271 },
-  { iso: "DE", name: "Berlin",      country: "Germany",                                    lat: 52.5200, lon: 13.4050 },
-  { iso: "GR", name: "Athens",      country: "Greece",                                     lat: 37.9838, lon: 23.7275 },
-  { iso: "VA", name: "Vatican City",country: "Holy See (Vatican City)",                    lat: 41.9029, lon: 12.4534 },
-  { iso: "HU", name: "Budapest",    country: "Hungary",                                    lat: 47.4979, lon: 19.0402 },
-  { iso: "IS", name: "Reykjavík",   country: "Iceland",                                    lat: 64.1466, lon: -21.9426 },
-  { iso: "IE", name: "Dublin",      country: "Ireland",                                    lat: 53.3498, lon: -6.2603 },
-  { iso: "IL", name: "Jerusalem",   country: "Israel",                                     lat: 31.7683, lon: 35.2137 },
-  { iso: "IT", name: "Rome",        country: "Italy",                                      lat: 41.9028, lon: 12.4964 },
-  { iso: "LV", name: "Riga",        country: "Latvia",                                     lat: 56.9496, lon: 24.1052 },
-  { iso: "LI", name: "Vaduz",       country: "Liechtenstein",                              lat: 47.1410, lon:  9.5209 },
-  { iso: "LT", name: "Vilnius",     country: "Lithuania",                                  lat: 54.6872, lon: 25.2797 },
-  { iso: "LU", name: "Luxembourg",  country: "Luxembourg",                                 lat: 49.6116, lon:  6.1319 },
-  { iso: "MT", name: "Valletta",    country: "Malta",                                      lat: 35.8989, lon: 14.5146 },
-  { iso: "MC", name: "Monaco",      country: "Monaco",                                     lat: 43.7384, lon:  7.4246 },
-  { iso: "ME", name: "Podgorica",   country: "Montenegro",                                 lat: 42.4304, lon: 19.2594 },
-  { iso: "NL", name: "Amsterdam",   country: "Netherlands",                                lat: 52.3676, lon:  4.9041 },
-  { iso: "NO", name: "Oslo",        country: "Norway",                                     lat: 59.9139, lon: 10.7522 },
-  { iso: "PL", name: "Warsaw",      country: "Poland",                                     lat: 52.2297, lon: 21.0122 },
-  { iso: "PT", name: "Lisbon",      country: "Portugal",                                   lat: 38.7223, lon: -9.1393 },
-  { iso: "MD", name: "Chișinău",    country: "Republic of Moldova",                        lat: 47.0105, lon: 28.8638 },
-  { iso: "RO", name: "Bucharest",   country: "Romania",                                    lat: 44.4268, lon: 26.1025 },
-  { iso: "RU", name: "Moscow",      country: "Russia",                                     lat: 55.7558, lon: 37.6173 },
-  { iso: "SM", name: "San Marino",  country: "San Marino",                                 lat: 43.9424, lon: 12.4578 },
-  { iso: "RS", name: "Belgrade",    country: "Serbia",                                     lat: 44.7866, lon: 20.4489 },
-  { iso: "SK", name: "Bratislava",  country: "Slovakia",                                   lat: 48.1486, lon: 17.1077 },
-  { iso: "SI", name: "Ljubljana",   country: "Slovenia",                                   lat: 46.0569, lon: 14.5058 },
-  { iso: "ES", name: "Madrid",      country: "Spain",                                      lat: 40.4168, lon: -3.7038 },
-  { iso: "SE", name: "Stockholm",   country: "Sweden",                                     lat: 59.3293, lon: 18.0686 },
-  { iso: "CH", name: "Bern",        country: "Switzerland",                                lat: 46.9480, lon:  7.4474 },
-  { iso: "MK", name: "Skopje",      country: "The former Yugoslav Republic of Macedonia",  lat: 41.9981, lon: 21.4254 },
-  { iso: "TR", name: "Ankara",      country: "Turkey",                                     lat: 39.9334, lon: 32.8597 },
-  { iso: "UA", name: "Kyiv",        country: "Ukraine",                                    lat: 50.4501, lon: 30.5234 },
-  { iso: "GB", name: "London",      country: "United Kingdom",                             lat: 51.5074, lon: -0.1278 },
-];
+// ClaudeWeather — full-bleed world map with live weather + 7-day forecast.
+// National capitals are always visible; extra cities lazy-load as the user
+// zooms in. The map opens centered on Europe but pans/zooms to the whole world.
 
 const WEATHER_CODES = {
   0:  { icon: "☀️", label: "Clear sky" },
@@ -193,49 +140,122 @@ function formatDayHeader(day, sampleCity) {
 
 // Open-Meteo allows batched lat/lon. Cap each request at MAX_BATCH coordinates.
 const MAX_BATCH = 80;
+const FETCH_TIMEOUT_MS = 15000;
 
-async function fetchWeatherForCities(cities) {
-  if (cities.length === 0) return [];
-  const out = [];
-  for (let off = 0; off < cities.length; off += MAX_BATCH) {
-    const chunk = cities.slice(off, off + MAX_BATCH);
-    const lats = chunk.map((c) => c.lat).join(",");
-    const lons = chunk.map((c) => c.lon).join(",");
-    const url =
-      `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
-      `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
-      `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
-      `&forecast_days=8` +
-      `&timezone=auto`;
-    const resp = await fetch(url);
+// Weather is cached in localStorage for one hour, keyed by city. Reloads within
+// the hour render instantly and make no network calls — this is what keeps the
+// 241-capital startup from stalling on every visit.
+const WEATHER_TTL_MS = 60 * 60 * 1000;
+const CACHE_PREFIX = "cw:wx:";
+
+function readWeatherCache(key) {
+  try {
+    const raw = localStorage.getItem(CACHE_PREFIX + key);
+    if (!raw) return null;
+    const entry = JSON.parse(raw);
+    if (!entry || Date.now() - entry.t > WEATHER_TTL_MS) return null;
+    return { current: entry.current, daily: entry.daily };
+  } catch {
+    return null;
+  }
+}
+
+function writeWeatherCache(key, current, daily) {
+  const payload = JSON.stringify({ t: Date.now(), current, daily });
+  try {
+    localStorage.setItem(CACHE_PREFIX + key, payload);
+  } catch {
+    // Likely quota exceeded — drop our cached entries and try once more.
+    try {
+      for (let i = localStorage.length - 1; i >= 0; i--) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith(CACHE_PREFIX)) localStorage.removeItem(k);
+      }
+      localStorage.setItem(CACHE_PREFIX + key, payload);
+    } catch {
+      /* storage unavailable — fetching still works, just uncached */
+    }
+  }
+}
+
+function parseForecast(d) {
+  let current = null;
+  const daily = [];
+  if (d?.current) {
+    current = {
+      temp:     d.current.temperature_2m,
+      code:     d.current.weather_code,
+      humidity: d.current.relative_humidity_2m,
+      wind:     d.current.wind_speed_10m,
+      updated:  d.current.time,
+    };
+  }
+  if (d?.daily?.time) {
+    for (let k = 0; k < d.daily.time.length; k++) {
+      daily.push({
+        date: d.daily.time[k],
+        code: d.daily.weather_code?.[k],
+        tmax: d.daily.temperature_2m_max?.[k],
+        tmin: d.daily.temperature_2m_min?.[k],
+      });
+    }
+  }
+  return { current, daily };
+}
+
+async function fetchBatch(chunk) {
+  const lats = chunk.map((c) => c.lat).join(",");
+  const lons = chunk.map((c) => c.lon).join(",");
+  const url =
+    `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
+    `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
+    `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+    `&forecast_days=8` +
+    `&timezone=auto`;
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), FETCH_TIMEOUT_MS);
+  try {
+    const resp = await fetch(url, { signal: ctrl.signal });
     if (!resp.ok) throw new Error(`Open-Meteo ${resp.status}`);
     const data = await resp.json();
     const list = Array.isArray(data) ? data : [data];
-    chunk.forEach((c, i) => {
-      const d = list[i];
-      let current = null;
-      let daily = [];
-      if (d?.current) {
-        current = {
-          temp:     d.current.temperature_2m,
-          code:     d.current.weather_code,
-          humidity: d.current.relative_humidity_2m,
-          wind:     d.current.wind_speed_10m,
-          updated:  d.current.time,
-        };
-      }
-      if (d?.daily?.time) {
-        for (let k = 0; k < d.daily.time.length; k++) {
-          daily.push({
-            date: d.daily.time[k],
-            code: d.daily.weather_code?.[k],
-            tmax: d.daily.temperature_2m_max?.[k],
-            tmin: d.daily.temperature_2m_min?.[k],
-          });
-        }
-      }
-      out.push({ ...c, current, daily });
+    return chunk.map((c, i) => {
+      const { current, daily } = parseForecast(list[i]);
+      writeWeatherCache(c.key, current, daily);
+      return { ...c, current, daily };
     });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+async function fetchWeatherForCities(cities) {
+  if (cities.length === 0) return [];
+
+  // 1. Serve anything still fresh from the 1-hour cache.
+  const out = [];
+  const misses = [];
+  for (const c of cities) {
+    const cached = readWeatherCache(c.key);
+    if (cached) out.push({ ...c, current: cached.current, daily: cached.daily });
+    else misses.push(c);
+  }
+  if (misses.length === 0) return out;
+
+  // 2. Fetch the misses as parallel batches with a timeout. A failed or
+  //    timed-out batch is skipped (logged), not fatal — partial data still renders.
+  const batches = [];
+  for (let off = 0; off < misses.length; off += MAX_BATCH) {
+    batches.push(misses.slice(off, off + MAX_BATCH));
+  }
+  const settled = await Promise.allSettled(batches.map(fetchBatch));
+  let failed = 0;
+  for (const r of settled) {
+    if (r.status === "fulfilled") out.push(...r.value);
+    else { failed++; console.warn("Weather batch failed", r.reason); }
+  }
+  if (failed === settled.length && out.length === 0) {
+    throw new Error("All weather requests failed");
   }
   return out;
 }
@@ -308,6 +328,7 @@ const state = {
   weatherMarkers: new Map(),        // key → Leaflet marker
   selectedDay: 0,
   pendingFetchKeys: new Set(),      // keys currently being fetched
+  satellite: true,                  // true when the satellite base layer is active (default)
 };
 
 function applyDay(day) {
@@ -327,11 +348,12 @@ function applyDay(day) {
     if (!layer) continue;
     const view = viewForDay(city, day);
     const t = view?.temp;
+    const noData = t == null;
     layer.setStyle({
       fillColor: tempToColor(t),
-      fillOpacity: t == null ? 0.15 : 0.55,
+      fillOpacity: state.satellite ? (noData ? 0.08 : 0.32) : (noData ? 0.15 : 0.55),
     });
-    layer.setTooltipContent(buildTooltipHtml(city, view));
+    layer.setPopupContent(buildPopupHtml(city, view));
   }
 
   // Update all live markers.
@@ -370,6 +392,50 @@ function setMarkerVisibility(city, visible) {
   else if (!visible && state.map.hasLayer(marker)) state.map.removeLayer(marker);
 }
 
+// Approx on-screen footprint of a marker pill (centered on its point), plus a
+// little breathing room, used for collision tests.
+const MARKER_W = 68;
+const MARKER_H = 34;
+
+// Higher wins when two markers collide: capitals outrank extras; ties broken by
+// population (capitals carry exact pop; extras use their zoom tier as a proxy).
+function cityPriority(city) {
+  if (city.isCapital) return 2e9 + (city.pop || 0);
+  return { 5: 500000, 6: 200000, 7: 100000 }[city.minZoom] || 0;
+}
+
+// Hide markers that would overlap a higher-priority neighbour at the current
+// zoom; reveal more as the user zooms in. Greedy, highest priority placed first.
+function declutter() {
+  const map = state.map;
+  if (!map) return;
+  const zoom = map.getZoom();
+  const bounds = map.getBounds();
+
+  const candidates = [];
+  for (const city of state.cities) {
+    if (!state.weatherMarkers.has(city.key)) continue;
+    const zoomOk = city.isCapital || zoom >= city.minZoom;
+    if (zoomOk && bounds.contains([city.lat, city.lon])) candidates.push(city);
+    else setMarkerVisibility(city, false);
+  }
+  candidates.sort((a, b) => cityPriority(b) - cityPriority(a));
+
+  const placed = [];
+  for (const city of candidates) {
+    const p = map.latLngToContainerPoint([city.lat, city.lon]);
+    let collides = false;
+    for (const q of placed) {
+      if (Math.abs(p.x - q.x) < MARKER_W && Math.abs(p.y - q.y) < MARKER_H) {
+        collides = true;
+        break;
+      }
+    }
+    setMarkerVisibility(city, !collides);
+    if (!collides) placed.push(p);
+  }
+}
+
 async function recomputeVisible() {
   const map = state.map;
   if (!map) return;
@@ -382,11 +448,10 @@ async function recomputeVisible() {
     if (eligible && !city.current && !state.pendingFetchKeys.has(city.key)) {
       needFetch.push(city);
     }
-    // Existing markers: toggle visibility (capitals always visible).
-    if (state.weatherMarkers.has(city.key)) {
-      setMarkerVisibility(city, eligible);
-    }
   }
+
+  // Reveal/hide existing markers based on overlap at the current zoom.
+  declutter();
 
   if (needFetch.length === 0) return;
 
@@ -400,8 +465,10 @@ async function recomputeVisible() {
       stored.daily = fc.daily;
       addMarkerForCity(stored);
     }
-    // After adding new markers, ensure they reflect the selected day.
+    // After adding new markers, ensure they reflect the selected day and
+    // re-run collision layout so the new pills don't overlap.
     applyDay(state.selectedDay);
+    declutter();
   } catch (err) {
     console.error("Lazy city fetch failed", err);
   } finally {
@@ -416,6 +483,23 @@ function wireSlider() {
     const day = Number(e.target.value);
     applyDay(day);
   });
+}
+
+async function loadCapitals() {
+  const r = await fetch("capitals.json");
+  if (!r.ok) throw new Error(`capitals.json ${r.status}`);
+  const data = await r.json();
+  return data.map((c) => ({
+    key: `cap:${c.iso}`,
+    iso: c.iso,
+    name: c.name,
+    country: c.country,
+    lat: c.lat,
+    lon: c.lon,
+    pop: c.pop ?? 0,
+    minZoom: 0,
+    isCapital: true,
+  }));
 }
 
 async function loadExtraCities() {
@@ -442,52 +526,79 @@ async function loadExtraCities() {
 async function init() {
   setStatus("Initializing map…");
 
+  // Opens centered on Europe; pans/zooms to the whole world.
   state.map = L.map("map", {
     zoomControl: true,
-    worldCopyJump: false,
-    minZoom: 3,
+    worldCopyJump: true,
+    minZoom: 2,
     maxZoom: 9,
+    maxBounds: [
+      [-85, -200],
+      [85, 200],
+    ],
+    maxBoundsViscosity: 0.5,
   }).setView([54, 15], 4);
 
-  state.map.setMaxBounds([
-    [30, -35],
-    [75,  55],
-  ]);
-
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+  // Two switchable base layers: a light vector map and satellite imagery.
+  // Each bundles its own label/reference overlay (in shadowPane, above the
+  // country choropleth but below the markers).
+  const cartoBase = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
       '&copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
     maxZoom: 19,
-  }).addTo(state.map);
-
-  const labelsLayer = L.tileLayer(
+  });
+  const cartoLabels = L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
     { subdomains: "abcd", maxZoom: 19, pane: "shadowPane" }
   );
+  const mapView = L.layerGroup([cartoBase, cartoLabels]);
 
-  let geojson;
+  const satImagery = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+      attribution:
+        "Imagery &copy; <a href=\"https://www.esri.com\">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community",
+      maxZoom: 19,
+    }
+  );
+  const satLabels = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 19, pane: "shadowPane" }
+  );
+  const satelliteView = L.layerGroup([satImagery, satLabels]);
+
+  satelliteView.addTo(state.map); // satellite is the default view
+  L.control
+    .layers(
+      { "Satellite": satelliteView, "Map": mapView },
+      {},
+      { position: "topright" }
+    )
+    .addTo(state.map);
+
+  // Dim the temperature choropleth over satellite so the imagery shows through.
+  state.map.on("baselayerchange", (e) => {
+    state.satellite = e.name === "Satellite";
+    applyDay(state.selectedDay);
+  });
+
+  let geojson, capitals;
   try {
-    setStatus("Loading Europe map…");
-    const r = await fetch("europe.geo.json");
-    if (!r.ok) throw new Error(`GeoJSON ${r.status}`);
-    geojson = await r.json();
+    setStatus("Loading world map…");
+    const [geoResp, caps] = await Promise.all([fetch("world.geo.json"), loadCapitals()]);
+    if (!geoResp.ok) throw new Error(`GeoJSON ${geoResp.status}`);
+    geojson = await geoResp.json();
+    capitals = caps;
   } catch (err) {
     console.error(err);
     setStatus("Failed to load map.");
-    showError("Could not load Europe map data.", () => init());
+    showError("Could not load world map data.", () => init());
     return;
   }
 
   // Register capitals and extras into shared state.cities.
-  const capitals = CAPITALS_RAW.map((c) => ({
-    ...c,
-    key: `cap:${c.iso}`,
-    country: c.country,
-    minZoom: 0,
-    isCapital: true,
-  }));
   const extras = await loadExtraCities();
   state.cities = [...capitals, ...extras];
   for (const c of state.cities) state.citiesByKey.set(c.key, c);
@@ -504,18 +615,19 @@ async function init() {
     onEachFeature: (feature, layer) => {
       const iso = feature.properties.ISO2;
       state.countryLayers.set(iso, layer);
-      layer.bindTooltip("", {
-        className: "weather-tooltip",
-        sticky: true,
-        direction: "top",
-      });
+      // Weather shows on click (popup), not on hover. Content is filled in by
+      // applyDay for countries that have a capital in our dataset.
+      layer.bindPopup(
+        `<div class="popup-title">${feature.properties.NAME}</div>` +
+          `<div class="popup-row"><span>No weather data</span></div>`,
+        { maxWidth: 260 }
+      );
       layer.on({
         mouseover: (e) => e.target.setStyle({ weight: 2, color: "#222", opacity: 1 }),
         mouseout:  (e) => e.target.setStyle({ weight: 1, color: "#ffffff", opacity: 0.7 }),
       });
     },
   }).addTo(state.map);
-  labelsLayer.addTo(state.map);
 
   // Fetch capitals up-front and create their markers.
   try {
@@ -536,6 +648,7 @@ async function init() {
 
   wireSlider();
   applyDay(0);
+  declutter(); // thin out overlapping capitals on the initial view
 
   // Lazy-load extras on map movement.
   const debounced = debounce(recomputeVisible, 300);

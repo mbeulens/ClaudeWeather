@@ -1,0 +1,1930 @@
+[
+{
+"iso": "AF",
+"name": "Kabul",
+"country": "Afghanistan",
+"lat": 34.5281,
+"lon": 69.1723,
+"pop": 4434550
+},
+{
+"iso": "AX",
+"name": "Mariehamn",
+"country": "Aland Islands",
+"lat": 60.0973,
+"lon": 19.9348,
+"pop": 10682
+},
+{
+"iso": "AL",
+"name": "Tirana",
+"country": "Albania",
+"lat": 41.3274,
+"lon": 19.8187,
+"pop": 418495
+},
+{
+"iso": "DZ",
+"name": "Algiers",
+"country": "Algeria",
+"lat": 36.7323,
+"lon": 3.0875,
+"pop": 2364230
+},
+{
+"iso": "AS",
+"name": "Pago Pago",
+"country": "American Samoa",
+"lat": -14.2781,
+"lon": -170.7025,
+"pop": 11500
+},
+{
+"iso": "AD",
+"name": "Andorra la Vella",
+"country": "Andorra",
+"lat": 42.5078,
+"lon": 1.5211,
+"pop": 20430
+},
+{
+"iso": "AO",
+"name": "Luanda",
+"country": "Angola",
+"lat": -8.8368,
+"lon": 13.2343,
+"pop": 2776168
+},
+{
+"iso": "AI",
+"name": "The Valley",
+"country": "Anguilla",
+"lat": 18.217,
+"lon": -63.0578,
+"pop": 2035
+},
+{
+"iso": "AG",
+"name": "Saint John’s",
+"country": "Antigua and Barbuda",
+"lat": 17.121,
+"lon": -61.8433,
+"pop": 51737
+},
+{
+"iso": "AR",
+"name": "Buenos Aires",
+"country": "Argentina",
+"lat": -34.6131,
+"lon": -58.3772,
+"pop": 2891082
+},
+{
+"iso": "AM",
+"name": "Yerevan",
+"country": "Armenia",
+"lat": 40.1776,
+"lon": 44.5126,
+"pop": 1144700
+},
+{
+"iso": "AW",
+"name": "Oranjestad",
+"country": "Aruba",
+"lat": 12.524,
+"lon": -70.027,
+"pop": 29998
+},
+{
+"iso": "AU",
+"name": "Canberra",
+"country": "Australia",
+"lat": -35.2835,
+"lon": 149.1281,
+"pop": 367752
+},
+{
+"iso": "AT",
+"name": "Vienna",
+"country": "Austria",
+"lat": 48.2085,
+"lon": 16.3721,
+"pop": 1691468
+},
+{
+"iso": "AZ",
+"name": "Baku",
+"country": "Azerbaijan",
+"lat": 40.3777,
+"lon": 49.892,
+"pop": 2351300
+},
+{
+"iso": "BS",
+"name": "Nassau",
+"country": "Bahamas",
+"lat": 25.0582,
+"lon": -77.3431,
+"pop": 227940
+},
+{
+"iso": "BH",
+"name": "Manama",
+"country": "Bahrain",
+"lat": 26.2279,
+"lon": 50.5857,
+"pop": 147074
+},
+{
+"iso": "BD",
+"name": "Dhaka",
+"country": "Bangladesh",
+"lat": 23.7104,
+"lon": 90.4074,
+"pop": 10356500
+},
+{
+"iso": "BB",
+"name": "Bridgetown",
+"country": "Barbados",
+"lat": 13.1073,
+"lon": -59.6202,
+"pop": 98511
+},
+{
+"iso": "BY",
+"name": "Minsk",
+"country": "Belarus",
+"lat": 53.9002,
+"lon": 27.5665,
+"pop": 1742124
+},
+{
+"iso": "BE",
+"name": "Brussels",
+"country": "Belgium",
+"lat": 50.8505,
+"lon": 4.3488,
+"pop": 1019022
+},
+{
+"iso": "BZ",
+"name": "Belmopan",
+"country": "Belize",
+"lat": 17.2538,
+"lon": -88.764,
+"pop": 13381
+},
+{
+"iso": "BJ",
+"name": "Porto-Novo",
+"country": "Benin",
+"lat": 6.4965,
+"lon": 2.6036,
+"pop": 264320
+},
+{
+"iso": "BM",
+"name": "Hamilton",
+"country": "Bermuda",
+"lat": 32.2949,
+"lon": -64.783,
+"pop": 902
+},
+{
+"iso": "BT",
+"name": "Thimphu",
+"country": "Bhutan",
+"lat": 27.4661,
+"lon": 89.6419,
+"pop": 98676
+},
+{
+"iso": "BO",
+"name": "Sucre",
+"country": "Bolivia",
+"lat": -19.0333,
+"lon": -65.2627,
+"pop": 224838
+},
+{
+"iso": "BQ",
+"name": "Kralendijk",
+"country": "Bonaire, Saint Eustatius and Saba ",
+"lat": 12.15,
+"lon": -68.2667,
+"pop": 10620
+},
+{
+"iso": "BA",
+"name": "Sarajevo",
+"country": "Bosnia and Herzegovina",
+"lat": 43.8486,
+"lon": 18.3564,
+"pop": 696731
+},
+{
+"iso": "BW",
+"name": "Gaborone",
+"country": "Botswana",
+"lat": -24.6545,
+"lon": 25.9086,
+"pop": 246325
+},
+{
+"iso": "BR",
+"name": "Brasília",
+"country": "Brazil",
+"lat": -15.7797,
+"lon": -47.9297,
+"pop": 2207718
+},
+{
+"iso": "VG",
+"name": "Road Town",
+"country": "British Virgin Islands",
+"lat": 18.4269,
+"lon": -64.6208,
+"pop": 8449
+},
+{
+"iso": "BN",
+"name": "Bandar Seri Begawan",
+"country": "Brunei",
+"lat": 4.8903,
+"lon": 114.9401,
+"pop": 64409
+},
+{
+"iso": "BG",
+"name": "Sofia",
+"country": "Bulgaria",
+"lat": 42.6975,
+"lon": 23.3241,
+"pop": 1152556
+},
+{
+"iso": "BF",
+"name": "Ouagadougou",
+"country": "Burkina Faso",
+"lat": 12.3657,
+"lon": -1.5339,
+"pop": 2415266
+},
+{
+"iso": "BI",
+"name": "Gitega",
+"country": "Burundi",
+"lat": -3.4271,
+"lon": 29.9246,
+"pop": 64904
+},
+{
+"iso": "CV",
+"name": "Praia",
+"country": "Cabo Verde",
+"lat": 14.9315,
+"lon": -23.5125,
+"pop": 137868
+},
+{
+"iso": "KH",
+"name": "Phnom Penh",
+"country": "Cambodia",
+"lat": 11.5625,
+"lon": 104.916,
+"pop": 1573544
+},
+{
+"iso": "CM",
+"name": "Yaoundé",
+"country": "Cameroon",
+"lat": 3.8667,
+"lon": 11.5167,
+"pop": 1299369
+},
+{
+"iso": "CA",
+"name": "Ottawa",
+"country": "Canada",
+"lat": 45.4112,
+"lon": -75.6981,
+"pop": 1017449
+},
+{
+"iso": "KY",
+"name": "George Town",
+"country": "Cayman Islands",
+"lat": 19.2866,
+"lon": -81.3744,
+"pop": 29370
+},
+{
+"iso": "CF",
+"name": "Bangui",
+"country": "Central African Republic",
+"lat": 4.3612,
+"lon": 18.555,
+"pop": 812407
+},
+{
+"iso": "TD",
+"name": "N'Djamena",
+"country": "Chad",
+"lat": 12.1067,
+"lon": 15.0444,
+"pop": 1359526
+},
+{
+"iso": "CL",
+"name": "Santiago",
+"country": "Chile",
+"lat": -33.4569,
+"lon": -70.6483,
+"pop": 4837295
+},
+{
+"iso": "CN",
+"name": "Beijing",
+"country": "China",
+"lat": 39.9075,
+"lon": 116.3972,
+"pop": 18960744
+},
+{
+"iso": "CX",
+"name": "Flying Fish Cove",
+"country": "Christmas Island",
+"lat": -10.4217,
+"lon": 105.6791,
+"pop": 500
+},
+{
+"iso": "CC",
+"name": "West Island",
+"country": "Cocos Islands",
+"lat": -12.1568,
+"lon": 96.8225,
+"pop": 120
+},
+{
+"iso": "CO",
+"name": "Bogotá",
+"country": "Colombia",
+"lat": 4.6097,
+"lon": -74.0817,
+"pop": 7674366
+},
+{
+"iso": "KM",
+"name": "Moroni",
+"country": "Comoros",
+"lat": -11.7022,
+"lon": 43.2551,
+"pop": 74749
+},
+{
+"iso": "CK",
+"name": "Avarua",
+"country": "Cook Islands",
+"lat": -21.2075,
+"lon": -159.7755,
+"pop": 13373
+},
+{
+"iso": "CR",
+"name": "San José",
+"country": "Costa Rica",
+"lat": 9.9339,
+"lon": -84.0849,
+"pop": 335007
+},
+{
+"iso": "HR",
+"name": "Zagreb",
+"country": "Croatia",
+"lat": 45.8144,
+"lon": 15.978,
+"pop": 663592
+},
+{
+"iso": "CU",
+"name": "Havana",
+"country": "Cuba",
+"lat": 23.133,
+"lon": -82.383,
+"pop": 2163824
+},
+{
+"iso": "CW",
+"name": "Willemstad",
+"country": "Curacao",
+"lat": 12.1225,
+"lon": -68.8864,
+"pop": 125000
+},
+{
+"iso": "CY",
+"name": "Nicosia",
+"country": "Cyprus",
+"lat": 35.1728,
+"lon": 33.354,
+"pop": 200452
+},
+{
+"iso": "CZ",
+"name": "Prague",
+"country": "Czechia",
+"lat": 50.088,
+"lon": 14.4208,
+"pop": 1165581
+},
+{
+"iso": "CD",
+"name": "Kinshasa",
+"country": "Democratic Republic of the Congo",
+"lat": -4.3276,
+"lon": 15.3136,
+"pop": 16000000
+},
+{
+"iso": "DK",
+"name": "Copenhagen",
+"country": "Denmark",
+"lat": 55.6759,
+"lon": 12.5655,
+"pop": 1153615
+},
+{
+"iso": "DJ",
+"name": "Djibouti",
+"country": "Djibouti",
+"lat": 11.589,
+"lon": 43.145,
+"pop": 626512
+},
+{
+"iso": "DM",
+"name": "Roseau",
+"country": "Dominica",
+"lat": 15.3017,
+"lon": -61.3881,
+"pop": 16571
+},
+{
+"iso": "DO",
+"name": "Santo Domingo",
+"country": "Dominican Republic",
+"lat": 18.4719,
+"lon": -69.8923,
+"pop": 2201941
+},
+{
+"iso": "EC",
+"name": "Quito",
+"country": "Ecuador",
+"lat": -0.2298,
+"lon": -78.525,
+"pop": 2781641
+},
+{
+"iso": "EG",
+"name": "Cairo",
+"country": "Egypt",
+"lat": 30.0626,
+"lon": 31.2497,
+"pop": 9606916
+},
+{
+"iso": "SV",
+"name": "San Salvador",
+"country": "El Salvador",
+"lat": 13.6893,
+"lon": -89.1872,
+"pop": 525990
+},
+{
+"iso": "GQ",
+"name": "Ciudad de la Paz",
+"country": "Equatorial Guinea",
+"lat": 1.5925,
+"lon": 10.8236,
+"pop": 2000
+},
+{
+"iso": "ER",
+"name": "Asmara",
+"country": "Eritrea",
+"lat": 15.3381,
+"lon": 38.9318,
+"pop": 563930
+},
+{
+"iso": "EE",
+"name": "Tallinn",
+"country": "Estonia",
+"lat": 59.437,
+"lon": 24.7535,
+"pop": 394024
+},
+{
+"iso": "SZ",
+"name": "Mbabane",
+"country": "Eswatini",
+"lat": -26.3167,
+"lon": 31.1333,
+"pop": 76218
+},
+{
+"iso": "ET",
+"name": "Addis Ababa",
+"country": "Ethiopia",
+"lat": 9.025,
+"lon": 38.7469,
+"pop": 3860000
+},
+{
+"iso": "FK",
+"name": "Stanley",
+"country": "Falkland Islands",
+"lat": -51.6938,
+"lon": -57.857,
+"pop": 2213
+},
+{
+"iso": "FO",
+"name": "Tórshavn",
+"country": "Faroe Islands",
+"lat": 62.0097,
+"lon": -6.7716,
+"pop": 13200
+},
+{
+"iso": "FJ",
+"name": "Suva",
+"country": "Fiji",
+"lat": -18.1368,
+"lon": 178.4253,
+"pop": 77366
+},
+{
+"iso": "FI",
+"name": "Helsinki",
+"country": "Finland",
+"lat": 60.1695,
+"lon": 24.9354,
+"pop": 658864
+},
+{
+"iso": "FR",
+"name": "Paris",
+"country": "France",
+"lat": 48.8534,
+"lon": 2.3488,
+"pop": 2138551
+},
+{
+"iso": "GF",
+"name": "Cayenne",
+"country": "French Guiana",
+"lat": 4.9381,
+"lon": -52.3346,
+"pop": 61550
+},
+{
+"iso": "PF",
+"name": "Papeete",
+"country": "French Polynesia",
+"lat": -17.5347,
+"lon": -149.5684,
+"pop": 26357
+},
+{
+"iso": "TF",
+"name": "Port-aux-Français",
+"country": "French Southern Territories",
+"lat": -49.3492,
+"lon": 70.2194,
+"pop": 45
+},
+{
+"iso": "GA",
+"name": "Libreville",
+"country": "Gabon",
+"lat": 0.3924,
+"lon": 9.4536,
+"pop": 846090
+},
+{
+"iso": "GM",
+"name": "Banjul",
+"country": "Gambia",
+"lat": 13.4527,
+"lon": -16.578,
+"pop": 37274
+},
+{
+"iso": "GE",
+"name": "Tbilisi",
+"country": "Georgia",
+"lat": 41.6914,
+"lon": 44.8341,
+"pop": 1049498
+},
+{
+"iso": "DE",
+"name": "Berlin",
+"country": "Germany",
+"lat": 52.5244,
+"lon": 13.4105,
+"pop": 3426354
+},
+{
+"iso": "GH",
+"name": "Accra",
+"country": "Ghana",
+"lat": 5.556,
+"lon": -0.1969,
+"pop": 1963264
+},
+{
+"iso": "GI",
+"name": "Gibraltar",
+"country": "Gibraltar",
+"lat": 36.1447,
+"lon": -5.3526,
+"pop": 26544
+},
+{
+"iso": "GR",
+"name": "Athens",
+"country": "Greece",
+"lat": 37.9838,
+"lon": 23.7278,
+"pop": 664046
+},
+{
+"iso": "GL",
+"name": "Nuuk",
+"country": "Greenland",
+"lat": 64.1835,
+"lon": -51.7216,
+"pop": 14798
+},
+{
+"iso": "GD",
+"name": "Saint George's",
+"country": "Grenada",
+"lat": 12.0529,
+"lon": -61.7523,
+"pop": 7500
+},
+{
+"iso": "GP",
+"name": "Basse-Terre",
+"country": "Guadeloupe",
+"lat": 15.9971,
+"lon": -61.7321,
+"pop": 11472
+},
+{
+"iso": "GU",
+"name": "Hagåtña",
+"country": "Guam",
+"lat": 13.4757,
+"lon": 144.7489,
+"pop": 1051
+},
+{
+"iso": "GT",
+"name": "Guatemala City",
+"country": "Guatemala",
+"lat": 14.6407,
+"lon": -90.5133,
+"pop": 994938
+},
+{
+"iso": "GG",
+"name": "Saint Peter Port",
+"country": "Guernsey",
+"lat": 49.4598,
+"lon": -2.5353,
+"pop": 16488
+},
+{
+"iso": "GN",
+"name": "Conakry",
+"country": "Guinea",
+"lat": 9.538,
+"lon": -13.6773,
+"pop": 1928389
+},
+{
+"iso": "GW",
+"name": "Bissau",
+"country": "Guinea-Bissau",
+"lat": 11.8636,
+"lon": -15.5977,
+"pop": 439704
+},
+{
+"iso": "GY",
+"name": "Georgetown",
+"country": "Guyana",
+"lat": 6.8045,
+"lon": -58.1553,
+"pop": 235017
+},
+{
+"iso": "HT",
+"name": "Port-au-Prince",
+"country": "Haiti",
+"lat": 18.5435,
+"lon": -72.3388,
+"pop": 1234742
+},
+{
+"iso": "HN",
+"name": "Tegucigalpa",
+"country": "Honduras",
+"lat": 14.0818,
+"lon": -87.2068,
+"pop": 850848
+},
+{
+"iso": "HK",
+"name": "Hong Kong",
+"country": "Hong Kong",
+"lat": 22.2783,
+"lon": 114.1747,
+"pop": 7396076
+},
+{
+"iso": "HU",
+"name": "Budapest",
+"country": "Hungary",
+"lat": 47.4984,
+"lon": 19.0404,
+"pop": 1741041
+},
+{
+"iso": "IS",
+"name": "Reykjavík",
+"country": "Iceland",
+"lat": 64.1355,
+"lon": -21.8954,
+"pop": 118918
+},
+{
+"iso": "IN",
+"name": "New Delhi",
+"country": "India",
+"lat": 28.6214,
+"lon": 77.2148,
+"pop": 317797
+},
+{
+"iso": "ID",
+"name": "Jakarta",
+"country": "Indonesia",
+"lat": -6.2146,
+"lon": 106.8451,
+"pop": 8540121
+},
+{
+"iso": "IR",
+"name": "Tehran",
+"country": "Iran",
+"lat": 35.6944,
+"lon": 51.4215,
+"pop": 7153309
+},
+{
+"iso": "IQ",
+"name": "Baghdad",
+"country": "Iraq",
+"lat": 33.3406,
+"lon": 44.4009,
+"pop": 7216000
+},
+{
+"iso": "IE",
+"name": "Dublin",
+"country": "Ireland",
+"lat": 53.3331,
+"lon": -6.2489,
+"pop": 1024027
+},
+{
+"iso": "IM",
+"name": "Douglas",
+"country": "Isle of Man",
+"lat": 54.15,
+"lon": -4.4833,
+"pop": 26218
+},
+{
+"iso": "IT",
+"name": "Rome",
+"country": "Italy",
+"lat": 41.8919,
+"lon": 12.5113,
+"pop": 2318895
+},
+{
+"iso": "CI",
+"name": "Yamoussoukro",
+"country": "Ivory Coast",
+"lat": 6.8205,
+"lon": -5.2767,
+"pop": 275686
+},
+{
+"iso": "JM",
+"name": "Kingston",
+"country": "Jamaica",
+"lat": 17.997,
+"lon": -76.7936,
+"pop": 937700
+},
+{
+"iso": "JP",
+"name": "Tokyo",
+"country": "Japan",
+"lat": 35.6895,
+"lon": 139.6917,
+"pop": 9733276
+},
+{
+"iso": "JE",
+"name": "Saint Helier",
+"country": "Jersey",
+"lat": 49.188,
+"lon": -2.1049,
+"pop": 28000
+},
+{
+"iso": "JO",
+"name": "Amman",
+"country": "Jordan",
+"lat": 31.9552,
+"lon": 35.945,
+"pop": 1275857
+},
+{
+"iso": "KZ",
+"name": "Astana",
+"country": "Kazakhstan",
+"lat": 51.1801,
+"lon": 71.446,
+"pop": 345604
+},
+{
+"iso": "KE",
+"name": "Nairobi",
+"country": "Kenya",
+"lat": -1.2833,
+"lon": 36.8167,
+"pop": 4397073
+},
+{
+"iso": "KI",
+"name": "Tarawa",
+"country": "Kiribati",
+"lat": 1.3278,
+"lon": 172.977,
+"pop": 40311
+},
+{
+"iso": "XK",
+"name": "Pristina",
+"country": "Kosovo",
+"lat": 42.6727,
+"lon": 21.1669,
+"pop": 550000
+},
+{
+"iso": "KW",
+"name": "Kuwait City",
+"country": "Kuwait",
+"lat": 29.367,
+"lon": 47.9743,
+"pop": 60064
+},
+{
+"iso": "KG",
+"name": "Bishkek",
+"country": "Kyrgyzstan",
+"lat": 42.87,
+"lon": 74.59,
+"pop": 900000
+},
+{
+"iso": "LA",
+"name": "Vientiane",
+"country": "Laos",
+"lat": 17.9667,
+"lon": 102.6,
+"pop": 840940
+},
+{
+"iso": "LV",
+"name": "Riga",
+"country": "Latvia",
+"lat": 56.946,
+"lon": 24.1059,
+"pop": 742572
+},
+{
+"iso": "LB",
+"name": "Beirut",
+"country": "Lebanon",
+"lat": 33.8933,
+"lon": 35.5016,
+"pop": 1916100
+},
+{
+"iso": "LS",
+"name": "Maseru",
+"country": "Lesotho",
+"lat": -29.3167,
+"lon": 27.4833,
+"pop": 359753
+},
+{
+"iso": "LR",
+"name": "Monrovia",
+"country": "Liberia",
+"lat": 6.3005,
+"lon": -10.7969,
+"pop": 1542549
+},
+{
+"iso": "LY",
+"name": "Tripoli",
+"country": "Libya",
+"lat": 32.8874,
+"lon": 13.1873,
+"pop": 1302947
+},
+{
+"iso": "LI",
+"name": "Vaduz",
+"country": "Liechtenstein",
+"lat": 47.1415,
+"lon": 9.5215,
+"pop": 5197
+},
+{
+"iso": "LT",
+"name": "Vilnius",
+"country": "Lithuania",
+"lat": 54.6892,
+"lon": 25.2798,
+"pop": 542366
+},
+{
+"iso": "LU",
+"name": "Luxembourg",
+"country": "Luxembourg",
+"lat": 49.6098,
+"lon": 6.1327,
+"pop": 76684
+},
+{
+"iso": "MO",
+"name": "Macau",
+"country": "Macao",
+"lat": 22.2006,
+"lon": 113.5461,
+"pop": 649335
+},
+{
+"iso": "MG",
+"name": "Antananarivo",
+"country": "Madagascar",
+"lat": -18.9137,
+"lon": 47.5361,
+"pop": 1349501
+},
+{
+"iso": "MW",
+"name": "Lilongwe",
+"country": "Malawi",
+"lat": -13.9669,
+"lon": 33.7873,
+"pop": 1115815
+},
+{
+"iso": "MY",
+"name": "Kuala Lumpur",
+"country": "Malaysia",
+"lat": 3.1412,
+"lon": 101.6865,
+"pop": 1453975
+},
+{
+"iso": "MV",
+"name": "Male",
+"country": "Maldives",
+"lat": 4.1752,
+"lon": 73.5092,
+"pop": 103693
+},
+{
+"iso": "ML",
+"name": "Bamako",
+"country": "Mali",
+"lat": 12.6091,
+"lon": -7.9752,
+"pop": 4227569
+},
+{
+"iso": "MT",
+"name": "Valletta",
+"country": "Malta",
+"lat": 35.8997,
+"lon": 14.5148,
+"pop": 6794
+},
+{
+"iso": "MH",
+"name": "Majuro",
+"country": "Marshall Islands",
+"lat": 7.0897,
+"lon": 171.3803,
+"pop": 25400
+},
+{
+"iso": "MQ",
+"name": "Fort-de-France",
+"country": "Martinique",
+"lat": 14.6037,
+"lon": -61.0742,
+"pop": 89995
+},
+{
+"iso": "MR",
+"name": "Nouakchott",
+"country": "Mauritania",
+"lat": 18.0858,
+"lon": -15.9785,
+"pop": 1184530
+},
+{
+"iso": "MU",
+"name": "Port Louis",
+"country": "Mauritius",
+"lat": -20.1619,
+"lon": 57.4989,
+"pop": 155226
+},
+{
+"iso": "YT",
+"name": "Mamoudzou",
+"country": "Mayotte",
+"lat": -12.7823,
+"lon": 45.2288,
+"pop": 54831
+},
+{
+"iso": "MX",
+"name": "Mexico City",
+"country": "Mexico",
+"lat": 19.4285,
+"lon": -99.1277,
+"pop": 12294193
+},
+{
+"iso": "FM",
+"name": "Palikir",
+"country": "Micronesia",
+"lat": 6.9248,
+"lon": 158.1611,
+"pop": 6942
+},
+{
+"iso": "MD",
+"name": "Chisinau",
+"country": "Moldova",
+"lat": 47.009,
+"lon": 28.8594,
+"pop": 635994
+},
+{
+"iso": "MC",
+"name": "Monaco",
+"country": "Monaco",
+"lat": 43.7372,
+"lon": 7.4215,
+"pop": 32965
+},
+{
+"iso": "MN",
+"name": "Ulan Bator",
+"country": "Mongolia",
+"lat": 47.9077,
+"lon": 106.8832,
+"pop": 844818
+},
+{
+"iso": "ME",
+"name": "Podgorica",
+"country": "Montenegro",
+"lat": 42.4412,
+"lon": 19.2631,
+"pop": 236852
+},
+{
+"iso": "MS",
+"name": "Plymouth",
+"country": "Montserrat",
+"lat": 16.7055,
+"lon": -62.2129,
+"pop": 0
+},
+{
+"iso": "MA",
+"name": "Rabat",
+"country": "Morocco",
+"lat": 34.0132,
+"lon": -6.8326,
+"pop": 1655753
+},
+{
+"iso": "MZ",
+"name": "Maputo",
+"country": "Mozambique",
+"lat": -25.9655,
+"lon": 32.5832,
+"pop": 1254837
+},
+{
+"iso": "MM",
+"name": "Nay Pyi Taw",
+"country": "Myanmar",
+"lat": 19.745,
+"lon": 96.1297,
+"pop": 925000
+},
+{
+"iso": "NA",
+"name": "Windhoek",
+"country": "Namibia",
+"lat": -22.5594,
+"lon": 17.0832,
+"pop": 386219
+},
+{
+"iso": "NR",
+"name": "Yaren",
+"country": "Nauru",
+"lat": -0.5508,
+"lon": 166.9252,
+"pop": 1100
+},
+{
+"iso": "NP",
+"name": "Kathmandu",
+"country": "Nepal",
+"lat": 27.7017,
+"lon": 85.3206,
+"pop": 1442271
+},
+{
+"iso": "NC",
+"name": "Nouméa",
+"country": "New Caledonia",
+"lat": -22.2741,
+"lon": 166.4488,
+"pop": 93060
+},
+{
+"iso": "NZ",
+"name": "Wellington",
+"country": "New Zealand",
+"lat": -41.2866,
+"lon": 174.7756,
+"pop": 381900
+},
+{
+"iso": "NI",
+"name": "Managua",
+"country": "Nicaragua",
+"lat": 12.1328,
+"lon": -86.2504,
+"pop": 973087
+},
+{
+"iso": "NE",
+"name": "Niamey",
+"country": "Niger",
+"lat": 13.5137,
+"lon": 2.1098,
+"pop": 1323691
+},
+{
+"iso": "NG",
+"name": "Abuja",
+"country": "Nigeria",
+"lat": 9.0579,
+"lon": 7.4951,
+"pop": 2690000
+},
+{
+"iso": "NU",
+"name": "Alofi",
+"country": "Niue",
+"lat": -19.0529,
+"lon": -169.9196,
+"pop": 624
+},
+{
+"iso": "NF",
+"name": "Kingston",
+"country": "Norfolk Island",
+"lat": -29.0546,
+"lon": 167.9663,
+"pop": 880
+},
+{
+"iso": "KP",
+"name": "Pyongyang",
+"country": "North Korea",
+"lat": 39.0339,
+"lon": 125.7543,
+"pop": 3222000
+},
+{
+"iso": "MK",
+"name": "Skopje",
+"country": "North Macedonia",
+"lat": 41.9965,
+"lon": 21.4314,
+"pop": 474889
+},
+{
+"iso": "MP",
+"name": "Saipan",
+"country": "Northern Mariana Islands",
+"lat": 15.2123,
+"lon": 145.7545,
+"pop": 48220
+},
+{
+"iso": "NO",
+"name": "Oslo",
+"country": "Norway",
+"lat": 59.9127,
+"lon": 10.7461,
+"pop": 1082575
+},
+{
+"iso": "OM",
+"name": "Muscat",
+"country": "Oman",
+"lat": 23.5841,
+"lon": 58.4078,
+"pop": 797000
+},
+{
+"iso": "PK",
+"name": "Islamabad",
+"country": "Pakistan",
+"lat": 33.7215,
+"lon": 73.0433,
+"pop": 601600
+},
+{
+"iso": "PW",
+"name": "Ngerulmud",
+"country": "Palau",
+"lat": 7.5008,
+"lon": 134.6238,
+"pop": 0
+},
+{
+"iso": "PA",
+"name": "Panama City",
+"country": "Panama",
+"lat": 8.9936,
+"lon": -79.5197,
+"pop": 408168
+},
+{
+"iso": "PG",
+"name": "Port Moresby",
+"country": "Papua New Guinea",
+"lat": -9.4772,
+"lon": 147.1509,
+"pop": 283733
+},
+{
+"iso": "PY",
+"name": "Asunción",
+"country": "Paraguay",
+"lat": -25.2865,
+"lon": -57.647,
+"pop": 1482200
+},
+{
+"iso": "PE",
+"name": "Lima",
+"country": "Peru",
+"lat": -12.0432,
+"lon": -77.0282,
+"pop": 7737002
+},
+{
+"iso": "PH",
+"name": "Manila",
+"country": "Philippines",
+"lat": 14.6042,
+"lon": 120.9822,
+"pop": 1600000
+},
+{
+"iso": "PN",
+"name": "Adamstown",
+"country": "Pitcairn",
+"lat": -25.066,
+"lon": -130.1015,
+"pop": 46
+},
+{
+"iso": "PL",
+"name": "Warsaw",
+"country": "Poland",
+"lat": 52.2298,
+"lon": 21.0118,
+"pop": 1702139
+},
+{
+"iso": "PT",
+"name": "Lisbon",
+"country": "Portugal",
+"lat": 38.7251,
+"lon": -9.1498,
+"pop": 517802
+},
+{
+"iso": "PR",
+"name": "San Juan",
+"country": "Puerto Rico",
+"lat": 18.4663,
+"lon": -66.1057,
+"pop": 418140
+},
+{
+"iso": "QA",
+"name": "Doha",
+"country": "Qatar",
+"lat": 25.2855,
+"lon": 51.531,
+"pop": 344939
+},
+{
+"iso": "CG",
+"name": "Brazzaville",
+"country": "Republic of the Congo",
+"lat": -4.2661,
+"lon": 15.2832,
+"pop": 1982000
+},
+{
+"iso": "RE",
+"name": "Saint-Denis",
+"country": "Reunion",
+"lat": -20.8823,
+"lon": 55.4504,
+"pop": 154765
+},
+{
+"iso": "RO",
+"name": "Bucharest",
+"country": "Romania",
+"lat": 44.4323,
+"lon": 26.1063,
+"pop": 1877155
+},
+{
+"iso": "RU",
+"name": "Moscow",
+"country": "Russia",
+"lat": 55.752,
+"lon": 37.6178,
+"pop": 10381222
+},
+{
+"iso": "RW",
+"name": "Kigali",
+"country": "Rwanda",
+"lat": -1.95,
+"lon": 30.0588,
+"pop": 1132686
+},
+{
+"iso": "BL",
+"name": "Gustavia",
+"country": "Saint Barthelemy",
+"lat": 17.8962,
+"lon": -62.8498,
+"pop": 5988
+},
+{
+"iso": "SH",
+"name": "Jamestown",
+"country": "Saint Helena",
+"lat": -15.9249,
+"lon": -5.7182,
+"pop": 637
+},
+{
+"iso": "KN",
+"name": "Basseterre",
+"country": "Saint Kitts and Nevis",
+"lat": 17.2955,
+"lon": -62.725,
+"pop": 12920
+},
+{
+"iso": "LC",
+"name": "Castries",
+"country": "Saint Lucia",
+"lat": 13.9957,
+"lon": -61.0061,
+"pop": 20000
+},
+{
+"iso": "MF",
+"name": "Marigot",
+"country": "Saint Martin",
+"lat": 18.0682,
+"lon": -63.083,
+"pop": 5700
+},
+{
+"iso": "PM",
+"name": "Saint-Pierre",
+"country": "Saint Pierre and Miquelon",
+"lat": 46.7791,
+"lon": -56.1773,
+"pop": 6200
+},
+{
+"iso": "VC",
+"name": "Kingstown",
+"country": "Saint Vincent and the Grenadines",
+"lat": 13.1553,
+"lon": -61.2274,
+"pop": 24518
+},
+{
+"iso": "WS",
+"name": "Apia",
+"country": "Samoa",
+"lat": -13.8333,
+"lon": -171.7667,
+"pop": 40407
+},
+{
+"iso": "SM",
+"name": "San Marino",
+"country": "San Marino",
+"lat": 43.9367,
+"lon": 12.4464,
+"pop": 4500
+},
+{
+"iso": "ST",
+"name": "São Tomé",
+"country": "Sao Tome and Principe",
+"lat": 0.3376,
+"lon": 6.7299,
+"pop": 53300
+},
+{
+"iso": "SA",
+"name": "Riyadh",
+"country": "Saudi Arabia",
+"lat": 24.6877,
+"lon": 46.7219,
+"pop": 4205961
+},
+{
+"iso": "SN",
+"name": "Dakar",
+"country": "Senegal",
+"lat": 14.6937,
+"lon": -17.4441,
+"pop": 2646503
+},
+{
+"iso": "RS",
+"name": "Belgrade",
+"country": "Serbia",
+"lat": 44.804,
+"lon": 20.4651,
+"pop": 1273651
+},
+{
+"iso": "SC",
+"name": "Victoria",
+"country": "Seychelles",
+"lat": -4.62,
+"lon": 55.455,
+"pop": 22881
+},
+{
+"iso": "SL",
+"name": "Freetown",
+"country": "Sierra Leone",
+"lat": 8.4871,
+"lon": -13.2356,
+"pop": 802639
+},
+{
+"iso": "SG",
+"name": "Singapore",
+"country": "Singapore",
+"lat": 1.2897,
+"lon": 103.8501,
+"pop": 5638700
+},
+{
+"iso": "SX",
+"name": "Philipsburg",
+"country": "Sint Maarten",
+"lat": 18.026,
+"lon": -63.0458,
+"pop": 1400
+},
+{
+"iso": "SK",
+"name": "Bratislava",
+"country": "Slovakia",
+"lat": 48.1482,
+"lon": 17.1067,
+"pop": 423737
+},
+{
+"iso": "SI",
+"name": "Ljubljana",
+"country": "Slovenia",
+"lat": 46.0511,
+"lon": 14.5051,
+"pop": 272220
+},
+{
+"iso": "SB",
+"name": "Honiara",
+"country": "Solomon Islands",
+"lat": -9.4333,
+"lon": 159.95,
+"pop": 56298
+},
+{
+"iso": "SO",
+"name": "Mogadishu",
+"country": "Somalia",
+"lat": 2.0371,
+"lon": 45.3438,
+"pop": 2587183
+},
+{
+"iso": "ZA",
+"name": "Pretoria",
+"country": "South Africa",
+"lat": -25.7449,
+"lon": 28.1878,
+"pop": 2112693
+},
+{
+"iso": "GS",
+"name": "Grytviken",
+"country": "South Georgia and the South Sandwich Islands",
+"lat": -54.2811,
+"lon": -36.5092,
+"pop": 2
+},
+{
+"iso": "KR",
+"name": "Seoul",
+"country": "South Korea",
+"lat": 37.566,
+"lon": 126.9784,
+"pop": 10349312
+},
+{
+"iso": "SS",
+"name": "Juba",
+"country": "South Sudan",
+"lat": 4.8517,
+"lon": 31.5825,
+"pop": 450000
+},
+{
+"iso": "ES",
+"name": "Madrid",
+"country": "Spain",
+"lat": 40.4165,
+"lon": -3.7026,
+"pop": 3255944
+},
+{
+"iso": "LK",
+"name": "Colombo",
+"country": "Sri Lanka",
+"lat": 6.9355,
+"lon": 79.8487,
+"pop": 648034
+},
+{
+"iso": "SD",
+"name": "Khartoum",
+"country": "Sudan",
+"lat": 15.5518,
+"lon": 32.5324,
+"pop": 1974647
+},
+{
+"iso": "SR",
+"name": "Paramaribo",
+"country": "Suriname",
+"lat": 5.8664,
+"lon": -55.1668,
+"pop": 223757
+},
+{
+"iso": "SJ",
+"name": "Longyearbyen",
+"country": "Svalbard and Jan Mayen",
+"lat": 78.2233,
+"lon": 15.6469,
+"pop": 2368
+},
+{
+"iso": "SE",
+"name": "Stockholm",
+"country": "Sweden",
+"lat": 59.3294,
+"lon": 18.0687,
+"pop": 1515017
+},
+{
+"iso": "CH",
+"name": "Bern",
+"country": "Switzerland",
+"lat": 46.9481,
+"lon": 7.4474,
+"pop": 121631
+},
+{
+"iso": "SY",
+"name": "Damascus",
+"country": "Syria",
+"lat": 33.5102,
+"lon": 36.2913,
+"pop": 1569394
+},
+{
+"iso": "TW",
+"name": "Taipei",
+"country": "Taiwan",
+"lat": 25.0531,
+"lon": 121.5264,
+"pop": 7871900
+},
+{
+"iso": "TJ",
+"name": "Dushanbe",
+"country": "Tajikistan",
+"lat": 38.5358,
+"lon": 68.779,
+"pop": 679400
+},
+{
+"iso": "TZ",
+"name": "Dodoma",
+"country": "Tanzania",
+"lat": -6.1722,
+"lon": 35.7395,
+"pop": 765179
+},
+{
+"iso": "TH",
+"name": "Bangkok",
+"country": "Thailand",
+"lat": 13.754,
+"lon": 100.5014,
+"pop": 5104476
+},
+{
+"iso": "NL",
+"name": "Amsterdam",
+"country": "The Netherlands",
+"lat": 52.374,
+"lon": 4.8897,
+"pop": 741636
+},
+{
+"iso": "TL",
+"name": "Dili",
+"country": "Timor Leste",
+"lat": -8.5586,
+"lon": 125.5736,
+"pop": 150000
+},
+{
+"iso": "TG",
+"name": "Lomé",
+"country": "Togo",
+"lat": 6.1287,
+"lon": 1.2215,
+"pop": 2188376
+},
+{
+"iso": "TO",
+"name": "Nuku‘alofa",
+"country": "Tonga",
+"lat": -21.1368,
+"lon": -175.2011,
+"pop": 22400
+},
+{
+"iso": "TT",
+"name": "Port of Spain",
+"country": "Trinidad and Tobago",
+"lat": 10.6667,
+"lon": -61.5189,
+"pop": 49031
+},
+{
+"iso": "TN",
+"name": "Tunis",
+"country": "Tunisia",
+"lat": 36.819,
+"lon": 10.1658,
+"pop": 693210
+},
+{
+"iso": "TR",
+"name": "Ankara",
+"country": "Turkey",
+"lat": 39.9199,
+"lon": 32.8543,
+"pop": 3517182
+},
+{
+"iso": "TM",
+"name": "Ashgabat",
+"country": "Turkmenistan",
+"lat": 37.95,
+"lon": 58.3833,
+"pop": 1030063
+},
+{
+"iso": "TC",
+"name": "Cockburn Town",
+"country": "Turks and Caicos Islands",
+"lat": 21.4612,
+"lon": -71.1419,
+"pop": 3720
+},
+{
+"iso": "TV",
+"name": "Funafuti",
+"country": "Tuvalu",
+"lat": -8.5243,
+"lon": 179.1942,
+"pop": 6320
+},
+{
+"iso": "VI",
+"name": "Charlotte Amalie",
+"country": "U.S. Virgin Islands",
+"lat": 18.3419,
+"lon": -64.9307,
+"pop": 20000
+},
+{
+"iso": "UG",
+"name": "Kampala",
+"country": "Uganda",
+"lat": 0.3163,
+"lon": 32.5822,
+"pop": 1680600
+},
+{
+"iso": "UA",
+"name": "Kyiv",
+"country": "Ukraine",
+"lat": 50.4547,
+"lon": 30.5238,
+"pop": 2952301
+},
+{
+"iso": "AE",
+"name": "Abu Dhabi",
+"country": "United Arab Emirates",
+"lat": 24.4512,
+"lon": 54.397,
+"pop": 1807000
+},
+{
+"iso": "GB",
+"name": "London",
+"country": "United Kingdom",
+"lat": 51.5085,
+"lon": -0.1257,
+"pop": 8961989
+},
+{
+"iso": "US",
+"name": "Washington",
+"country": "United States",
+"lat": 38.8951,
+"lon": -77.0364,
+"pop": 689545
+},
+{
+"iso": "UY",
+"name": "Montevideo",
+"country": "Uruguay",
+"lat": -34.9033,
+"lon": -56.1882,
+"pop": 1270737
+},
+{
+"iso": "UZ",
+"name": "Tashkent",
+"country": "Uzbekistan",
+"lat": 41.2647,
+"lon": 69.2163,
+"pop": 1978028
+},
+{
+"iso": "VU",
+"name": "Port-Vila",
+"country": "Vanuatu",
+"lat": -17.7365,
+"lon": 168.3137,
+"pop": 35901
+},
+{
+"iso": "VA",
+"name": "Vatican City",
+"country": "Vatican",
+"lat": 41.9027,
+"lon": 12.4541,
+"pop": 829
+},
+{
+"iso": "VE",
+"name": "Caracas",
+"country": "Venezuela",
+"lat": 10.488,
+"lon": -66.8792,
+"pop": 3000000
+},
+{
+"iso": "VN",
+"name": "Hanoi",
+"country": "Vietnam",
+"lat": 21.0245,
+"lon": 105.8412,
+"pop": 8053663
+},
+{
+"iso": "WF",
+"name": "Mata-Utu",
+"country": "Wallis and Futuna",
+"lat": -13.2816,
+"lon": -176.1745,
+"pop": 1200
+},
+{
+"iso": "YE",
+"name": "Sanaa",
+"country": "Yemen",
+"lat": 15.3545,
+"lon": 44.2065,
+"pop": 1937451
+},
+{
+"iso": "ZM",
+"name": "Lusaka",
+"country": "Zambia",
+"lat": -15.4067,
+"lon": 28.2871,
+"pop": 2212301
+},
+{
+"iso": "ZW",
+"name": "Harare",
+"country": "Zimbabwe",
+"lat": -17.8277,
+"lon": 31.0534,
+"pop": 1542813
+}
+]
