@@ -30,6 +30,32 @@
       </div>
     </div>
 
+    <div id="forecast-slider" role="group" aria-label="Forecast day selector">
+      <div class="forecast-day-label">
+        <span id="day-name">Today</span>
+        <span id="day-date"></span>
+      </div>
+      <input
+        type="range"
+        id="day-slider"
+        min="0"
+        max="7"
+        value="0"
+        step="1"
+        aria-label="Days from today"
+      />
+      <div class="forecast-ticks" aria-hidden="true">
+        <span>Today</span>
+        <span>+1</span>
+        <span>+2</span>
+        <span>+3</span>
+        <span>+4</span>
+        <span>+5</span>
+        <span>+6</span>
+        <span>+7</span>
+      </div>
+    </div>
+
     <script
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
