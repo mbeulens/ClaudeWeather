@@ -1,59 +1,6 @@
-// ClaudeWeather — full-bleed Europe map with live weather + 7-day forecast,
-// capitals always visible, extra cities lazy-loaded as the user zooms in.
-
-const CAPITALS_RAW = [
-  { iso: "AL", name: "Tirana",      country: "Albania",                                    lat: 41.3275, lon: 19.8189 },
-  { iso: "AD", name: "Andorra la Vella", country: "Andorra",                               lat: 42.5063, lon:  1.5218 },
-  { iso: "AM", name: "Yerevan",     country: "Armenia",                                    lat: 40.1792, lon: 44.4991 },
-  { iso: "AT", name: "Vienna",      country: "Austria",                                    lat: 48.2082, lon: 16.3738 },
-  { iso: "AZ", name: "Baku",        country: "Azerbaijan",                                 lat: 40.4093, lon: 49.8671 },
-  { iso: "BY", name: "Minsk",       country: "Belarus",                                    lat: 53.9006, lon: 27.5590 },
-  { iso: "BE", name: "Brussels",    country: "Belgium",                                    lat: 50.8503, lon:  4.3517 },
-  { iso: "BA", name: "Sarajevo",    country: "Bosnia and Herzegovina",                     lat: 43.8563, lon: 18.4131 },
-  { iso: "BG", name: "Sofia",       country: "Bulgaria",                                   lat: 42.6977, lon: 23.3219 },
-  { iso: "HR", name: "Zagreb",      country: "Croatia",                                    lat: 45.8150, lon: 15.9819 },
-  { iso: "CY", name: "Nicosia",     country: "Cyprus",                                     lat: 35.1856, lon: 33.3823 },
-  { iso: "CZ", name: "Prague",      country: "Czech Republic",                             lat: 50.0755, lon: 14.4378 },
-  { iso: "DK", name: "Copenhagen",  country: "Denmark",                                    lat: 55.6761, lon: 12.5683 },
-  { iso: "EE", name: "Tallinn",     country: "Estonia",                                    lat: 59.4370, lon: 24.7536 },
-  { iso: "FO", name: "Tórshavn",    country: "Faroe Islands",                              lat: 62.0079, lon: -6.7713 },
-  { iso: "FI", name: "Helsinki",    country: "Finland",                                    lat: 60.1699, lon: 24.9384 },
-  { iso: "FR", name: "Paris",       country: "France",                                     lat: 48.8566, lon:  2.3522 },
-  { iso: "GE", name: "Tbilisi",     country: "Georgia",                                    lat: 41.7151, lon: 44.8271 },
-  { iso: "DE", name: "Berlin",      country: "Germany",                                    lat: 52.5200, lon: 13.4050 },
-  { iso: "GR", name: "Athens",      country: "Greece",                                     lat: 37.9838, lon: 23.7275 },
-  { iso: "VA", name: "Vatican City",country: "Holy See (Vatican City)",                    lat: 41.9029, lon: 12.4534 },
-  { iso: "HU", name: "Budapest",    country: "Hungary",                                    lat: 47.4979, lon: 19.0402 },
-  { iso: "IS", name: "Reykjavík",   country: "Iceland",                                    lat: 64.1466, lon: -21.9426 },
-  { iso: "IE", name: "Dublin",      country: "Ireland",                                    lat: 53.3498, lon: -6.2603 },
-  { iso: "IL", name: "Jerusalem",   country: "Israel",                                     lat: 31.7683, lon: 35.2137 },
-  { iso: "IT", name: "Rome",        country: "Italy",                                      lat: 41.9028, lon: 12.4964 },
-  { iso: "LV", name: "Riga",        country: "Latvia",                                     lat: 56.9496, lon: 24.1052 },
-  { iso: "LI", name: "Vaduz",       country: "Liechtenstein",                              lat: 47.1410, lon:  9.5209 },
-  { iso: "LT", name: "Vilnius",     country: "Lithuania",                                  lat: 54.6872, lon: 25.2797 },
-  { iso: "LU", name: "Luxembourg",  country: "Luxembourg",                                 lat: 49.6116, lon:  6.1319 },
-  { iso: "MT", name: "Valletta",    country: "Malta",                                      lat: 35.8989, lon: 14.5146 },
-  { iso: "MC", name: "Monaco",      country: "Monaco",                                     lat: 43.7384, lon:  7.4246 },
-  { iso: "ME", name: "Podgorica",   country: "Montenegro",                                 lat: 42.4304, lon: 19.2594 },
-  { iso: "NL", name: "Amsterdam",   country: "Netherlands",                                lat: 52.3676, lon:  4.9041 },
-  { iso: "NO", name: "Oslo",        country: "Norway",                                     lat: 59.9139, lon: 10.7522 },
-  { iso: "PL", name: "Warsaw",      country: "Poland",                                     lat: 52.2297, lon: 21.0122 },
-  { iso: "PT", name: "Lisbon",      country: "Portugal",                                   lat: 38.7223, lon: -9.1393 },
-  { iso: "MD", name: "Chișinău",    country: "Republic of Moldova",                        lat: 47.0105, lon: 28.8638 },
-  { iso: "RO", name: "Bucharest",   country: "Romania",                                    lat: 44.4268, lon: 26.1025 },
-  { iso: "RU", name: "Moscow",      country: "Russia",                                     lat: 55.7558, lon: 37.6173 },
-  { iso: "SM", name: "San Marino",  country: "San Marino",                                 lat: 43.9424, lon: 12.4578 },
-  { iso: "RS", name: "Belgrade",    country: "Serbia",                                     lat: 44.7866, lon: 20.4489 },
-  { iso: "SK", name: "Bratislava",  country: "Slovakia",                                   lat: 48.1486, lon: 17.1077 },
-  { iso: "SI", name: "Ljubljana",   country: "Slovenia",                                   lat: 46.0569, lon: 14.5058 },
-  { iso: "ES", name: "Madrid",      country: "Spain",                                      lat: 40.4168, lon: -3.7038 },
-  { iso: "SE", name: "Stockholm",   country: "Sweden",                                     lat: 59.3293, lon: 18.0686 },
-  { iso: "CH", name: "Bern",        country: "Switzerland",                                lat: 46.9480, lon:  7.4474 },
-  { iso: "MK", name: "Skopje",      country: "The former Yugoslav Republic of Macedonia",  lat: 41.9981, lon: 21.4254 },
-  { iso: "TR", name: "Ankara",      country: "Turkey",                                     lat: 39.9334, lon: 32.8597 },
-  { iso: "UA", name: "Kyiv",        country: "Ukraine",                                    lat: 50.4501, lon: 30.5234 },
-  { iso: "GB", name: "London",      country: "United Kingdom",                             lat: 51.5074, lon: -0.1278 },
-];
+// ClaudeWeather — full-bleed world map with live weather + 7-day forecast.
+// National capitals are always visible; extra cities lazy-load as the user
+// zooms in. The map opens centered on Europe but pans/zooms to the whole world.
 
 const WEATHER_CODES = {
   0:  { icon: "☀️", label: "Clear sky" },
@@ -418,6 +365,22 @@ function wireSlider() {
   });
 }
 
+async function loadCapitals() {
+  const r = await fetch("capitals.json");
+  if (!r.ok) throw new Error(`capitals.json ${r.status}`);
+  const data = await r.json();
+  return data.map((c) => ({
+    key: `cap:${c.iso}`,
+    iso: c.iso,
+    name: c.name,
+    country: c.country,
+    lat: c.lat,
+    lon: c.lon,
+    minZoom: 0,
+    isCapital: true,
+  }));
+}
+
 async function loadExtraCities() {
   try {
     const r = await fetch("cities.json");
@@ -442,17 +405,18 @@ async function loadExtraCities() {
 async function init() {
   setStatus("Initializing map…");
 
+  // Opens centered on Europe; pans/zooms to the whole world.
   state.map = L.map("map", {
     zoomControl: true,
-    worldCopyJump: false,
-    minZoom: 3,
+    worldCopyJump: true,
+    minZoom: 2,
     maxZoom: 9,
+    maxBounds: [
+      [-85, -200],
+      [85, 200],
+    ],
+    maxBoundsViscosity: 0.5,
   }).setView([54, 15], 4);
-
-  state.map.setMaxBounds([
-    [30, -35],
-    [75,  55],
-  ]);
 
   L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
     attribution:
@@ -467,27 +431,21 @@ async function init() {
     { subdomains: "abcd", maxZoom: 19, pane: "shadowPane" }
   );
 
-  let geojson;
+  let geojson, capitals;
   try {
-    setStatus("Loading Europe map…");
-    const r = await fetch("europe.geo.json");
-    if (!r.ok) throw new Error(`GeoJSON ${r.status}`);
-    geojson = await r.json();
+    setStatus("Loading world map…");
+    const [geoResp, caps] = await Promise.all([fetch("world.geo.json"), loadCapitals()]);
+    if (!geoResp.ok) throw new Error(`GeoJSON ${geoResp.status}`);
+    geojson = await geoResp.json();
+    capitals = caps;
   } catch (err) {
     console.error(err);
     setStatus("Failed to load map.");
-    showError("Could not load Europe map data.", () => init());
+    showError("Could not load world map data.", () => init());
     return;
   }
 
   // Register capitals and extras into shared state.cities.
-  const capitals = CAPITALS_RAW.map((c) => ({
-    ...c,
-    key: `cap:${c.iso}`,
-    country: c.country,
-    minZoom: 0,
-    isCapital: true,
-  }));
   const extras = await loadExtraCities();
   state.cities = [...capitals, ...extras];
   for (const c of state.cities) state.citiesByKey.set(c.key, c);
