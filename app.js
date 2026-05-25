@@ -255,6 +255,7 @@ const state = {
   weatherMarkers: new Map(),        // key → Leaflet marker
   selectedDay: 0,
   pendingFetchKeys: new Set(),      // keys currently being fetched
+  satellite: false,                 // true when the satellite base layer is active
 };
 
 function applyDay(day) {
@@ -274,9 +275,10 @@ function applyDay(day) {
     if (!layer) continue;
     const view = viewForDay(city, day);
     const t = view?.temp;
+    const noData = t == null;
     layer.setStyle({
       fillColor: tempToColor(t),
-      fillOpacity: t == null ? 0.15 : 0.55,
+      fillOpacity: state.satellite ? (noData ? 0.08 : 0.32) : (noData ? 0.15 : 0.55),
     });
     layer.setTooltipContent(buildTooltipHtml(city, view));
   }
@@ -418,18 +420,50 @@ async function init() {
     maxBoundsViscosity: 0.5,
   }).setView([54, 15], 4);
 
-  L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
+  // Two switchable base layers: a light vector map and satellite imagery.
+  // Each bundles its own label/reference overlay (in shadowPane, above the
+  // country choropleth but below the markers).
+  const cartoBase = L.tileLayer("https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png", {
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, ' +
       '&copy; <a href="https://carto.com/attributions">CARTO</a>',
     subdomains: "abcd",
     maxZoom: 19,
-  }).addTo(state.map);
-
-  const labelsLayer = L.tileLayer(
+  });
+  const cartoLabels = L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
     { subdomains: "abcd", maxZoom: 19, pane: "shadowPane" }
   );
+  const mapView = L.layerGroup([cartoBase, cartoLabels]);
+
+  const satImagery = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+    {
+      attribution:
+        "Imagery &copy; <a href=\"https://www.esri.com\">Esri</a>, Maxar, Earthstar Geographics, and the GIS User Community",
+      maxZoom: 19,
+    }
+  );
+  const satLabels = L.tileLayer(
+    "https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",
+    { maxZoom: 19, pane: "shadowPane" }
+  );
+  const satelliteView = L.layerGroup([satImagery, satLabels]);
+
+  mapView.addTo(state.map);
+  L.control
+    .layers(
+      { "Map": mapView, "Satellite": satelliteView },
+      {},
+      { position: "topright" }
+    )
+    .addTo(state.map);
+
+  // Dim the temperature choropleth over satellite so the imagery shows through.
+  state.map.on("baselayerchange", (e) => {
+    state.satellite = e.name === "Satellite";
+    applyDay(state.selectedDay);
+  });
 
   let geojson, capitals;
   try {
@@ -473,7 +507,6 @@ async function init() {
       });
     },
   }).addTo(state.map);
-  labelsLayer.addTo(state.map);
 
   // Fetch capitals up-front and create their markers.
   try {
