@@ -147,15 +147,55 @@ function showError(message, onRetry) {
   document.body.appendChild(banner);
 }
 
+// Returns view for slider day index (0=Today, 1..7=forecast).
+// For day=0 we use `current` (live hourly temp). For day>=1 we use `daily[day]`.
+function viewForDay(city, day) {
+  if (day === 0) {
+    const c = city.current;
+    if (!c) return null;
+    return {
+      temp: c.temp,
+      code: c.code,
+      extras: { humidity: c.humidity, wind: c.wind, updated: c.updated, isToday: true },
+    };
+  }
+  const d = city.daily?.[day];
+  if (!d) return null;
+  return {
+    temp: d.tmax,
+    tmax: d.tmax,
+    tmin: d.tmin,
+    code: d.code,
+    extras: { isToday: false, date: d.date },
+  };
+}
+
+function formatDayHeader(day, sampleCity) {
+  const today = new Date();
+  if (day === 0) {
+    return {
+      name: "Today",
+      date: new Intl.DateTimeFormat(undefined, { weekday: "short", month: "short", day: "numeric" }).format(today),
+    };
+  }
+  const dateStr = sampleCity?.daily?.[day]?.date;
+  const d = dateStr ? new Date(dateStr) : new Date(today.getTime() + day * 86400000);
+  return {
+    name: new Intl.DateTimeFormat(undefined, { weekday: "long" }).format(d),
+    date: new Intl.DateTimeFormat(undefined, { month: "short", day: "numeric" }).format(d),
+  };
+}
+
 async function fetchWeatherForAll(capitals) {
   // Batch all capitals into ONE Open-Meteo request via comma-separated lat/lon.
-  // The response is then an array (one entry per coordinate). Falls back to per-city
-  // requests if the batch fails.
+  // Returns each city extended with `.current` and `.daily` (array indexed 0..7).
   const lats = capitals.map((c) => c.lat).join(",");
   const lons = capitals.map((c) => c.lon).join(",");
   const url =
     `https://api.open-meteo.com/v1/forecast?latitude=${lats}&longitude=${lons}` +
     `&current=temperature_2m,weather_code,relative_humidity_2m,wind_speed_10m` +
+    `&daily=weather_code,temperature_2m_max,temperature_2m_min` +
+    `&forecast_days=8` +
     `&timezone=auto`;
 
   const resp = await fetch(url);
@@ -164,23 +204,42 @@ async function fetchWeatherForAll(capitals) {
   const list = Array.isArray(data) ? data : [data];
   return capitals.map((cap, i) => {
     const d = list[i];
-    if (!d || !d.current) return { ...cap, weather: null };
-    return {
-      ...cap,
-      weather: {
-        temp:     d.current.temperature_2m,
-        code:     d.current.weather_code,
-        humidity: d.current.relative_humidity_2m,
-        wind:     d.current.wind_speed_10m,
-        updated:  d.current.time,
-      },
-    };
+    if (!d) return { ...cap, current: null, daily: [] };
+    const current = d.current
+      ? {
+          temp:     d.current.temperature_2m,
+          code:     d.current.weather_code,
+          humidity: d.current.relative_humidity_2m,
+          wind:     d.current.wind_speed_10m,
+          updated:  d.current.time,
+        }
+      : null;
+    const daily = [];
+    if (d.daily?.time) {
+      for (let k = 0; k < d.daily.time.length; k++) {
+        daily.push({
+          date: d.daily.time[k],
+          code: d.daily.weather_code?.[k],
+          tmax: d.daily.temperature_2m_max?.[k],
+          tmin: d.daily.temperature_2m_min?.[k],
+        });
+      }
+    }
+    return { ...cap, current, daily };
   });
 }
 
-function buildMarkerIcon(temp, code) {
-  const { icon } = describeCode(code);
-  const tempStr = temp == null ? "—" : `${Math.round(temp)}°`;
+function buildMarkerIcon(view) {
+  if (!view) {
+    return L.divIcon({
+      className: "weather-marker",
+      html: `<div class="marker-inner"><span class="icon">❓</span><span class="temp">—</span></div>`,
+      iconSize: [0, 0],
+      iconAnchor: [0, 0],
+    });
+  }
+  const { icon } = describeCode(view.code);
+  const tempStr = view.temp == null ? "—" : `${Math.round(view.temp)}°`;
   return L.divIcon({
     className: "weather-marker",
     html: `<div class="marker-inner"><span class="icon">${icon}</span><span class="temp">${tempStr}</span></div>`,
@@ -189,18 +248,97 @@ function buildMarkerIcon(temp, code) {
   });
 }
 
-function buildPopupHtml(c) {
-  const w = c.weather;
-  const { icon, label } = describeCode(w?.code);
-  const updated = w?.updated ? new Date(w.updated).toLocaleString() : "—";
+function buildTooltipHtml(city, view) {
+  if (!view) return `<strong>${city.name}</strong><br>No data`;
+  const { label } = describeCode(view.code);
+  if (view.extras?.isToday) {
+    return `<strong>${city.name}</strong><br>${Math.round(view.temp)}°C · ${label}`;
+  }
+  return (
+    `<strong>${city.name}</strong> · ${view.extras?.date ?? ""}<br>` +
+    `${Math.round(view.tmax)}° / ${Math.round(view.tmin)}° · ${label}`
+  );
+}
+
+function buildPopupHtml(city, view) {
+  if (!view) {
+    return `<div class="popup-title">${city.name}, ${city.country}</div><div class="popup-row"><span>No data</span></div>`;
+  }
+  const { icon, label } = describeCode(view.code);
+  if (view.extras?.isToday) {
+    const w = view.extras;
+    const updated = w?.updated ? new Date(w.updated).toLocaleString() : "—";
+    return `
+      <div class="popup-title"><span class="icon">${icon}</span>${city.name}, ${city.country}</div>
+      <div class="popup-row"><span class="label">Condition</span><span>${label}</span></div>
+      <div class="popup-row"><span class="label">Temperature</span><span>${Math.round(view.temp)}°C</span></div>
+      <div class="popup-row"><span class="label">Humidity</span><span>${w?.humidity != null ? w.humidity + "%" : "—"}</span></div>
+      <div class="popup-row"><span class="label">Wind</span><span>${w?.wind != null ? w.wind + " km/h" : "—"}</span></div>
+      <div class="popup-updated">Updated ${updated}</div>
+    `;
+  }
+  const dateLabel = view.extras?.date
+    ? new Intl.DateTimeFormat(undefined, { weekday: "long", month: "short", day: "numeric" }).format(new Date(view.extras.date))
+    : "—";
   return `
-    <div class="popup-title"><span class="icon">${icon}</span>${c.name}, ${c.country}</div>
+    <div class="popup-title"><span class="icon">${icon}</span>${city.name}, ${city.country}</div>
+    <div class="popup-row"><span class="label">Forecast</span><span>${dateLabel}</span></div>
     <div class="popup-row"><span class="label">Condition</span><span>${label}</span></div>
-    <div class="popup-row"><span class="label">Temperature</span><span>${w?.temp != null ? Math.round(w.temp) + "°C" : "—"}</span></div>
-    <div class="popup-row"><span class="label">Humidity</span><span>${w?.humidity != null ? w.humidity + "%" : "—"}</span></div>
-    <div class="popup-row"><span class="label">Wind</span><span>${w?.wind != null ? w.wind + " km/h" : "—"}</span></div>
-    <div class="popup-updated">Updated ${updated}</div>
+    <div class="popup-row"><span class="label">High</span><span>${view.tmax != null ? Math.round(view.tmax) + "°C" : "—"}</span></div>
+    <div class="popup-row"><span class="label">Low</span><span>${view.tmin != null ? Math.round(view.tmin) + "°C" : "—"}</span></div>
   `;
+}
+
+// Renderer state — references kept so the slider can mutate them in place.
+const state = {
+  cities: [],                       // CAPITALS extended with weather
+  countryLayers: new Map(),         // ISO2 → Leaflet path layer
+  weatherMarkers: new Map(),        // ISO2 → Leaflet marker
+  selectedDay: 0,
+};
+
+function applyDay(day) {
+  state.selectedDay = day;
+
+  // Update day-name + date header above the slider.
+  const sample = state.cities.find((c) => c.daily?.length > 0) ?? state.cities[0];
+  const { name, date } = formatDayHeader(day, sample);
+  const nameEl = document.getElementById("day-name");
+  const dateEl = document.getElementById("day-date");
+  if (nameEl) nameEl.textContent = name;
+  if (dateEl) dateEl.textContent = date;
+
+  // Update country fills.
+  for (const city of state.cities) {
+    const layer = state.countryLayers.get(city.iso);
+    if (!layer) continue;
+    const view = viewForDay(city, day);
+    const t = view?.temp;
+    layer.setStyle({
+      fillColor: tempToColor(t),
+      fillOpacity: t == null ? 0.15 : 0.55,
+    });
+    layer.setTooltipContent(buildTooltipHtml(city, view));
+  }
+
+  // Update markers.
+  for (const city of state.cities) {
+    const marker = state.weatherMarkers.get(city.iso);
+    if (!marker) continue;
+    const view = viewForDay(city, day);
+    marker.setIcon(buildMarkerIcon(view));
+    marker.setTooltipContent(buildTooltipHtml(city, view));
+    marker.setPopupContent(buildPopupHtml(city, view));
+  }
+}
+
+function wireSlider() {
+  const slider = document.getElementById("day-slider");
+  if (!slider) return;
+  slider.addEventListener("input", (e) => {
+    const day = Number(e.target.value);
+    applyDay(day);
+  });
 }
 
 async function init() {
@@ -210,10 +348,9 @@ async function init() {
     zoomControl: true,
     worldCopyJump: false,
     minZoom: 3,
-    maxZoom: 7,
+    maxZoom: 9,
   }).setView([54, 15], 4);
 
-  // Constrain view to roughly Europe
   map.setMaxBounds([
     [30, -35],
     [75,  55],
@@ -227,7 +364,6 @@ async function init() {
     maxZoom: 19,
   }).addTo(map);
 
-  // Labels-only layer goes on top of country fills later.
   const labelsLayer = L.tileLayer(
     "https://{s}.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}{r}.png",
     { subdomains: "abcd", maxZoom: 19, pane: "shadowPane" }
@@ -246,48 +382,29 @@ async function init() {
     return;
   }
 
-  let capitalsWithWeather;
   try {
-    setStatus(`Fetching weather for ${CAPITALS.length} capitals…`);
-    capitalsWithWeather = await fetchWeatherForAll(CAPITALS);
+    setStatus(`Fetching weather + 7-day forecast for ${CAPITALS.length} capitals…`);
+    state.cities = await fetchWeatherForAll(CAPITALS);
   } catch (err) {
     console.error(err);
     setStatus("Weather unavailable.");
     showError("Could not fetch weather from Open-Meteo.", () => init());
-    capitalsWithWeather = CAPITALS.map((c) => ({ ...c, weather: null }));
+    state.cities = CAPITALS.map((c) => ({ ...c, current: null, daily: [] }));
   }
 
-  // Index temps by ISO2 for country fill.
-  const tempByIso = {};
-  for (const c of capitalsWithWeather) {
-    if (c.weather?.temp != null) tempByIso[c.iso] = c.weather.temp;
-  }
-
-  // Draw country layer.
+  // Draw country layer; capture references for later updates.
   L.geoJSON(geojson, {
-    style: (feature) => {
-      const iso = feature.properties.ISO2;
-      const t = tempByIso[iso];
-      return {
-        fillColor: tempToColor(t),
-        fillOpacity: t == null ? 0.15 : 0.55,
-        color: "#ffffff",
-        weight: 1,
-        opacity: 0.7,
-      };
-    },
+    style: () => ({
+      fillColor: "#cccccc",
+      fillOpacity: 0.15,
+      color: "#ffffff",
+      weight: 1,
+      opacity: 0.7,
+    }),
     onEachFeature: (feature, layer) => {
       const iso = feature.properties.ISO2;
-      const cap = capitalsWithWeather.find((c) => c.iso === iso);
-      const name = feature.properties.NAME;
-      const t = tempByIso[iso];
-      const condition = cap?.weather?.code != null ? describeCode(cap.weather.code).label : "—";
-      const tooltip =
-        `<strong>${name}</strong><br>` +
-        (t != null
-          ? `${Math.round(t)}°C · ${condition}`
-          : "No data");
-      layer.bindTooltip(tooltip, {
+      state.countryLayers.set(iso, layer);
+      layer.bindTooltip("", {
         className: "weather-tooltip",
         sticky: true,
         direction: "top",
@@ -299,28 +416,28 @@ async function init() {
     },
   }).addTo(map);
 
-  // Draw labels on top of country fills.
   labelsLayer.addTo(map);
 
-  // Drop weather markers.
+  // Drop weather markers (only for cities with at least current data).
   let placed = 0;
-  for (const c of capitalsWithWeather) {
-    if (!c.weather) continue;
+  for (const c of state.cities) {
+    if (!c.current && (!c.daily || c.daily.length === 0)) continue;
     const marker = L.marker([c.lat, c.lon], {
-      icon: buildMarkerIcon(c.weather.temp, c.weather.code),
+      icon: buildMarkerIcon({ temp: c.current?.temp, code: c.current?.code, extras: { isToday: true } }),
       keyboard: false,
       riseOnHover: true,
     }).addTo(map);
 
-    marker.bindTooltip(
-      `<strong>${c.name}</strong><br>${Math.round(c.weather.temp)}°C · ${describeCode(c.weather.code).label}`,
-      { className: "weather-tooltip", direction: "top", offset: [0, -10] }
-    );
-    marker.bindPopup(buildPopupHtml(c), { maxWidth: 260 });
+    marker.bindTooltip("", { className: "weather-tooltip", direction: "top", offset: [0, -10] });
+    marker.bindPopup("", { maxWidth: 260 });
+    state.weatherMarkers.set(c.iso, marker);
     placed++;
   }
 
-  setStatus(`${placed} cities · live data from Open-Meteo`);
+  wireSlider();
+  applyDay(0);
+
+  setStatus(`${placed} cities · live + 7-day from Open-Meteo`);
 }
 
 document.addEventListener("DOMContentLoaded", init);
