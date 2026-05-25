@@ -5,6 +5,8 @@ A full-screen map of Europe with live weather (sun / cloud / rain icons + temper
 - **Map:** Leaflet + CartoDB Positron tiles, full viewport
 - **Data:** [Open-Meteo](https://open-meteo.com) (free, no API key required)
 - **Granularity:** European countries (shaded by temperature) + capital-city markers (icon + temp)
+- **Forecast slider:** scrub from today through +5 days; fills and markers re-style in place
+- **Zoom-based cities:** 51 capitals load up front; more cities appear as you zoom in
 - **Stack:** Plain HTML / CSS / JavaScript — no build step
 
 ## Run
@@ -20,11 +22,13 @@ python3 -m http.server 8000
 
 | File              | Purpose                                                    |
 | ----------------- | ---------------------------------------------------------- |
-| `index.html`      | Leaflet container + script tags                            |
-| `style.css`       | Full-bleed map, marker / tooltip / legend styles           |
-| `app.js`          | Weather fetch, country shading, markers, interactions      |
+| `index.html`      | Leaflet container + forecast slider markup + script tags   |
+| `style.css`       | Full-bleed map, marker / tooltip / legend / slider styles  |
+| `app.js`          | Weather fetch, country shading, markers, slider, zoom logic |
 | `europe.geo.json` | Bundled GeoJSON of European countries                      |
+| `cities.json`     | European cities ≥100k population, tiered by `minZoom`       |
 | `VERSION`         | Current semver                                             |
+| `CHANGELOG.md`    | Release history                                            |
 
 ## Versioning
 
