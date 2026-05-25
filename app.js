@@ -328,7 +328,7 @@ const state = {
   weatherMarkers: new Map(),        // key → Leaflet marker
   selectedDay: 0,
   pendingFetchKeys: new Set(),      // keys currently being fetched
-  satellite: false,                 // true when the satellite base layer is active
+  satellite: true,                  // true when the satellite base layer is active (default)
 };
 
 function applyDay(day) {
@@ -569,10 +569,10 @@ async function init() {
   );
   const satelliteView = L.layerGroup([satImagery, satLabels]);
 
-  mapView.addTo(state.map);
+  satelliteView.addTo(state.map); // satellite is the default view
   L.control
     .layers(
-      { "Map": mapView, "Satellite": satelliteView },
+      { "Satellite": satelliteView, "Map": mapView },
       {},
       { position: "topright" }
     )
